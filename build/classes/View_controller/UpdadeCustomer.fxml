@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="498.0" prefWidth="571.0" styleClass="appbg" stylesheets="@../images/Style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_controller.UpdadeCustomerController">
+   <children>
+      <VBox layoutX="96.0" layoutY="35.0" prefHeight="406.0" prefWidth="368.0" style="-fx-background-color: #FFFAFA;">
+         <children>
+            <Pane fx:id="namePane" prefHeight="109.0" prefWidth="368.0">
+               <children>
+                  <TableView fx:id="customerTableView" layoutX="82.0" layoutY="6.0" prefHeight="88.0" prefWidth="216.0">
+                    <columns>
+                      <TableColumn fx:id="customerNameColumn" prefWidth="215.0" text="Customer" />
+                    </columns>
+                  </TableView>
+               </children>
+            </Pane>
+            <Pane fx:id="namePane1" prefHeight="57.0" prefWidth="379.0">
+               <children>
+                  <Label fx:id="addres1Lbl" layoutX="17.0" layoutY="20.0" text="Address 1 :">
+                     <font>
+                        <Font name="Bell MT" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="addres1Txt" layoutX="85.0" layoutY="16.0" prefHeight="25.0" prefWidth="258.0" />
+               </children>
+            </Pane>
+            <Pane fx:id="namePane11" prefHeight="57.0" prefWidth="379.0">
+               <children>
+                  <Label fx:id="addres2Lbl" layoutX="17.0" layoutY="20.0" text="Address 2 :">
+                     <font>
+                        <Font name="Bell MT" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="addres2Txt" layoutX="85.0" layoutY="16.0" prefHeight="25.0" prefWidth="258.0" />
+               </children>
+            </Pane>
+            <Pane fx:id="namePane111" prefHeight="57.0" prefWidth="379.0">
+               <children>
+                  <Label fx:id="countryLbl" layoutX="23.0" layoutY="20.0" text="Country :">
+                     <font>
+                        <Font name="Bell MT" size="14.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="countryCbox" layoutX="85.0" layoutY="16.0" prefWidth="150.0" />
+               </children>
+            </Pane>
+            <Pane fx:id="namePane112" prefHeight="57.0" prefWidth="379.0">
+               <children>
+                  <Label fx:id="cityLbl" layoutX="41.0" layoutY="20.0" text="City :">
+                     <font>
+                        <Font name="Bell MT" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="cityTxt" layoutX="85.0" layoutY="16.0" prefHeight="25.0" prefWidth="258.0" />
+               </children>
+            </Pane>
+            <Pane fx:id="namePane1121" prefHeight="57.0" prefWidth="379.0">
+               <children>
+                  <Label fx:id="postalCodeLbl" layoutX="3.0" layoutY="20.0" text="Postal Code :">
+                     <font>
+                        <Font name="Bell MT" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="postalCodeTxt" layoutX="86.0" layoutY="16.0" prefHeight="25.0" prefWidth="258.0" />
+               </children>
+            </Pane>
+            <Pane fx:id="namePane11211" prefHeight="57.0" prefWidth="379.0">
+               <children>
+                  <Label fx:id="phoneLbl" layoutX="28.0" layoutY="20.0" text="Phone :">
+                     <font>
+                        <Font name="Bell MT" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="phoneTxt" layoutX="85.0" layoutY="16.0" prefHeight="25.0" prefWidth="258.0" />
+               </children>
+            </Pane>
+         </children>
+      </VBox>
+      <Button fx:id="addCustomerCancelBtn" layoutX="104.0" layoutY="450.0" mnemonicParsing="false" onAction="#cancelBtnAction" prefHeight="25.0" prefWidth="89.0" text="Cancel" />
+      <Button fx:id="saveCustomerBtn" layoutX="370.0" layoutY="450.0" mnemonicParsing="false" onAction="#SaveBtnAction" prefHeight="25.0" prefWidth="89.0" text="Save" />
+      <Label fx:id="CustomerLbl" layoutX="74.0" layoutY="8.0" text="Customer update">
+         <font>
+            <Font name="Bell MT Bold" size="16.0" />
+         </font>
+      </Label>
+      <Button fx:id="deleteCustomerBtn" layoutX="236.0" layoutY="450.0" mnemonicParsing="false" onAction="#deleteBtnAction" prefHeight="25.0" prefWidth="89.0" text="Delete" />
+   </children>
+</AnchorPane>

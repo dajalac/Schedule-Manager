@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="493.0" prefWidth="451.0" styleClass="appbg" stylesheets="@../images/Style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_controller.NewAppointmentController">
+   <children>
+      <VBox layoutX="49.0" layoutY="44.0" prefHeight="385.0" prefWidth="342.0" style="-fx-background-color: #FFFAFA;">
+         <children>
+            <Pane prefHeight="72.0" prefWidth="342.0">
+               <children>
+                  <Label fx:id="customerNameLbl" layoutX="34.0" layoutY="28.0" text="Customer :">
+                     <font>
+                        <Font name="Bell MT" size="16.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="customerNameCbox" layoutX="125.0" layoutY="26.0" prefWidth="150.0" />
+               </children>
+            </Pane>
+            <Pane prefHeight="72.0" prefWidth="342.0">
+               <children>
+                  <Label fx:id="serviceLbl" layoutX="42.0" layoutY="21.0" prefHeight="25.0" prefWidth="56.0" text="Service :">
+                     <font>
+                        <Font name="Bell MT" size="16.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="serviceCbox" layoutX="125.0" layoutY="26.0" prefWidth="150.0" />
+               </children>
+            </Pane>
+            <Pane prefHeight="72.0" prefWidth="342.0">
+               <children>
+                  <Label fx:id="consultantLbl" layoutX="34.0" layoutY="28.0" text="Consultant :">
+                     <font>
+                        <Font name="Bell MT" size="15.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="consultantCbox" layoutX="125.0" layoutY="26.0" prefWidth="150.0" />
+               </children>
+            </Pane>
+            <Pane prefHeight="72.0" prefWidth="342.0">
+               <children>
+                  <Label fx:id="typeLbl" layoutX="68.0" layoutY="28.0" text="Type :">
+                     <font>
+                        <Font name="Bell MT" size="15.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="typeCbox" layoutX="125.0" layoutY="26.0" prefWidth="150.0" />
+               </children>
+            </Pane>
+            <Pane prefHeight="72.0" prefWidth="342.0">
+               <children>
+                  <Label fx:id="timeLbl" layoutX="184.0" layoutY="28.0" text="Time :">
+                     <font>
+                        <Font name="Bell MT" size="15.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="timeCbox" layoutX="239.0" layoutY="24.0" prefHeight="25.0" prefWidth="67.0" />
+                  <Label fx:id="dateLbl" layoutX="43.0" layoutY="30.0" text="Date : ">
+                     <font>
+                        <Font name="Bell MT" size="15.0" />
+                     </font>
+                  </Label>
+                  <DatePicker fx:id="datePicker" layoutX="85.0" layoutY="26.0" prefHeight="25.0" prefWidth="90.0" />
+               </children>
+            </Pane>
+            <Pane prefHeight="94.0" prefWidth="342.0">
+               <children>
+                  <Label fx:id="noteLbl" layoutX="39.0" layoutY="21.0" text="Note : ">
+                     <font>
+                        <Font name="Bell MT" size="15.0" />
+                     </font>
+                  </Label>
+                  <TextArea fx:id="descriptionTxtArea" layoutX="80.0" layoutY="7.0" prefHeight="69.0" prefWidth="230.0" />
+               </children>
+            </Pane>
+         </children>
+      </VBox>
+      <Button fx:id="cancelBtn" layoutX="90.0" layoutY="444.0" mnemonicParsing="false" onAction="#cancelBtnAction" prefHeight="25.0" prefWidth="96.0" text="Cancel" />
+      <Button fx:id="saveBtn" layoutX="280.0" layoutY="444.0" mnemonicParsing="false" onAction="#saveBtnAction" prefHeight="25.0" prefWidth="96.0" text="Save" />
+      <Label fx:id="apptLabl" layoutX="52.0" layoutY="16.0" text="Appointment update">
+         <font>
+            <Font name="Bell MT Bold" size="16.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
