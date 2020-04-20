@@ -55,11 +55,12 @@ public class RecordsController implements Initializable {
     @FXML
     private void okBtnAction(ActionEvent event) throws IOException {
         
-        Parent modifyProductsRoot = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
-        Scene modifyProductsScene = new Scene(modifyProductsRoot);
-        Stage modifyProductsStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        modifyProductsStage.setScene(modifyProductsScene);
-        modifyProductsStage.show();
+        Parent root = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
+        Scene scene = new Scene(root);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.setTitle("Appointment Scheduler");
+        stage.show();  
     }
     
 }

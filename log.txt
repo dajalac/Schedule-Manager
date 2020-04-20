@@ -1,0 +1,13 @@
+2020-04-20T16:19:52.785Z--test Sucess!2020-04-20T16:22:27.568Z[pt_BR]-test Sucess!2020-04-20T16:24:02.128Z[pt_BR]-test Sucess!
+2020-04-20T16:24:32.386Z[pt_BR]-test Sucess!
+2020-04-20T16:31:36.677Z[pt_BR]-test Sucess!
+2020-04-20 16:37:21[pt_BR]-test Sucess!
+2020-04-20 16:48:20[pt_BR]- User: test Sucess!
+2020-04-20 16:50:38[pt_BR]- User: test Sucess!
+2020-04-20 16:53:07[UTC]- User: test Sucessed
+2020-04-20 17:00:38[UTC]- User: t Access denied!
+2020-04-20 18:27:14 [UTC]- User: test Access granted!
+2020-04-20 18:27:55 [UTC]- User: test Access granted!
+2020-04-20 18:58:29 [UTC]- User: test Access granted!
+2020-04-20 19:13:39 [UTC]- User: test Access granted!
+2020-04-20 19:14:40 [UTC]- User: sarahh Access granted!

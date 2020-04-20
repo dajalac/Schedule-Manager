@@ -19,12 +19,12 @@ public interface UserDAO {
     
     // used for set active 1 or 0
     
-    public void setUserAct(int ID);
+    public void setUserAct(int ID) throws SQLException, Exception ;
     
     // used for get the user ID needed in the appointment table
     // used for get the user name needed in all tables in the createdby field
     
-    public User getUserNameId(int act);
+    public User getUserNameId(int act)throws SQLException, Exception;
     
     
     

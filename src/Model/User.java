@@ -22,7 +22,14 @@ public class User {
         private String lastUpdateBy;
 
     public User(int userid, String userName, String password, int act) {
-        
+        this.userId = userid;
+        this.userName = userName;
+        this.password = password;
+        this.active = act; 
+    }
+
+    public User(int userid, String userName) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public int getUserId() {

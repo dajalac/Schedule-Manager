@@ -95,11 +95,12 @@ public class EditAppointmentController implements Initializable {
     }
     
     private void goToMain(ActionEvent event) throws IOException{
-        Parent modifyProductsRoot = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
-        Scene modifyProductsScene = new Scene(modifyProductsRoot);
-        Stage modifyProductsStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        modifyProductsStage.setScene(modifyProductsScene);
-        modifyProductsStage.show();  
+        Parent root = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
+        Scene scene = new Scene(root);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.setTitle("Appointment Scheduler");
+        stage.show();  
     }
   
 }
