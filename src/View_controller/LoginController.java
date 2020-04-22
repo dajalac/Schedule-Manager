@@ -13,6 +13,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -180,9 +181,8 @@ public class LoginController implements Initializable {
     private void log(String userName, String succeedOrNot) throws IOException{
         
        LocalDateTime ldt = LocalDateTime.now();
-       String timeUtc = TimeConversion.toUtc(ldt);
-       
-       
+       String timeUtc = TimeConversion. toUtcString(ldt);
+
        String msg = timeUtc + " [UTC]"+ "- User: "+ userName +" "+ succeedOrNot+"\n"; 
        
        //write to the file 

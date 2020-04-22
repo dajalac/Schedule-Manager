@@ -18,7 +18,14 @@ import java.sql.SQLException;
 public class UserDAOImpl implements UserDAO{
 
       
-            
+    /**
+     * 
+     * @param user
+     * @param pswd
+     * @return
+     * @throws SQLException
+     * @throws Exception 
+     */        
     @Override
     public User getUser(String user, String pswd) throws SQLException, Exception {
       
@@ -58,6 +65,12 @@ public class UserDAOImpl implements UserDAO{
        
     }
 
+    /**
+     * 
+     * @param ID
+     * @throws SQLException
+     * @throws Exception 
+     */
     @Override
     public void setUserAct(int ID)throws SQLException, Exception  {
        
@@ -89,6 +102,13 @@ public class UserDAOImpl implements UserDAO{
         
     }
 
+    /**
+     * 
+     * @param act
+     * @return
+     * @throws SQLException
+     * @throws Exception 
+     */
     @Override
     public User getUserNameId(int act)throws SQLException, Exception {
         User userResult;
