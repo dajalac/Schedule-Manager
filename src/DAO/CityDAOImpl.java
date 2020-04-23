@@ -21,41 +21,34 @@ public class CityDAOImpl implements CityDAO {
 
     /**
      * 
+     * @param cityName
      * @return
      * @throws SQLException
      * @throws Exception 
      */
     @Override
-    public ObservableList<City> getAllCities() throws SQLException, Exception {
-        ObservableList<City> allCities = FXCollections.observableArrayList();
-        City cityResult;
+    public boolean getAllCities(String cityName) throws SQLException, Exception {
         
-        
-        String sql = "SELECT* FROM city"; // query
+        String sql = "SELECT* FROM city WHERE city = ? "; // query
 
         Connection conn = DBConnection.makeConnection(); // making the connection
 
         PreparedStatement prSt = conn.prepareStatement(sql);
+        prSt.setString(1, cityName);
         ResultSet result = prSt.executeQuery();
 
-        if (result != null) {
+     
+           if (result.next()) {
+                
+               DBConnection.closeConnection();
+                return true; 
+           }
+           else{
+             DBConnection.closeConnection();
 
-            while (result.next()) {
-                int cityid = result.getInt("cityId");
-                String city = result.getString("city");
-
-                // save in the city object
-                cityResult = new City(cityid, city);
-                allCities.add(cityResult);
-
-                return allCities;
-            }
-        }
-        DBConnection.closeConnection();
-
-        return null;
-    
-        
+             return false;   
+           }
+ 
     }
 
     /**
@@ -103,7 +96,7 @@ public class CityDAOImpl implements CityDAO {
         Connection conn= DBConnection.makeConnection(); // making the connection
         
         String sql = "INSERT INTO city (city,countryId, createDate, createdBy,lastUpdate, lastUpdateBy) "+
-                      "VALUES(?, ?,'CURRENT_DATE',?,'CURRENT_TIMESTAMP',?)";
+                      "VALUES(?, ?,CURRENT_DATE(),?,CURRENT_TIMESTAMP,?)";
         PreparedStatement prSt = conn.prepareStatement(sql);
         prSt.setString(1,city);
         prSt.setInt(2, countryId);

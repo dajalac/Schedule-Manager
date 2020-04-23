@@ -29,7 +29,8 @@ public class User {
     }
 
     public User(int userid, String userName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.userId = userid;
+        this.userName = userName;
     }
 
     public int getUserId() {

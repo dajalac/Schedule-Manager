@@ -15,7 +15,7 @@ import javafx.collections.ObservableList;
  */
 public interface CityDAO {
     
-    public ObservableList<City> getAllCities ()throws SQLException, Exception;
+    public boolean getAllCities (String cityName)throws SQLException, Exception;
     
     public int getCityId(String cityName)throws SQLException, Exception;
     

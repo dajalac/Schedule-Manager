@@ -13,18 +13,37 @@ import java.sql.Timestamp;
  */
 public class Reports {
     
-    private String month;
+    private int month;
     private int numberOfAppointment;
     private String type;
     private String consultant;
     private Timestamp dateAndTime;
-    private String customers; 
+    private int customerId; 
 
-    public String getMonth() {
+    public Reports(int month, int apptmNumber, String type) {
+         this.month = month;
+         this.numberOfAppointment = apptmNumber;
+         this.type = type; 
+    }
+
+    public Reports(int customerId, Timestamp start, String contact) {
+        this.customerId = customerId;
+        this.dateAndTime = start;
+        this.consultant = contact; 
+    }
+    
+    public Reports(String type, int customerId, Timestamp start) {
+        this.customerId = customerId;
+        this.dateAndTime = start;
+        this.type = type; 
+    }
+    
+
+    public int getMonth() {
         return month;
     }
 
-    public void setMonth(String month) {
+    public void setMonth(int month) {
         this.month = month;
     }
 
@@ -60,12 +79,12 @@ public class Reports {
         this.dateAndTime = dateAndTime;
     }
 
-    public String getCustomers() {
-        return customers;
+    public int getCustomers() {
+        return customerId;
     }
 
-    public void setCustomers(String customers) {
-        this.customers = customers;
+    public void setCustomers(int customerId) {
+        this.customerId = customerId;
     }
     
     

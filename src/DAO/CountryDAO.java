@@ -19,5 +19,7 @@ public interface CountryDAO {
     
     public int getCountryId (String countryName)throws SQLException, Exception;
     
-    public ObservableList<Country> getAllCountries ()throws SQLException, Exception;
+    public boolean getAllCountries (String countryName)throws SQLException, Exception;
+    
+   // public boolean checkIfCountryExist(String countryName)throws SQLException, Exception;
 }

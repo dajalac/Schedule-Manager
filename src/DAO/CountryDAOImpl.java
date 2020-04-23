@@ -32,7 +32,7 @@ public class CountryDAOImpl implements CountryDAO {
         Connection conn= DBConnection.makeConnection(); // making the connection
         
         String sql = "INSERT INTO country (country,createDate, createdBy,lastUpdate, lastUpdateBy) "+
-                      "VALUES(?, 'CURRENT_DATE',?,'CURRENT_TIMESTAMP',?)";
+                      "VALUES(?, CURRENT_DATE(),?,CURRENT_TIMESTAMP,?)";
         PreparedStatement prSt = conn.prepareStatement(sql);
         prSt.setString(1,country);
         prSt.setString(2,userName);
@@ -83,20 +83,22 @@ public class CountryDAOImpl implements CountryDAO {
  * @throws Exception 
  */
     @Override
-    public ObservableList<Country> getAllCountries() throws SQLException, Exception{
+    public boolean getAllCountries(String countryName) throws SQLException, Exception{
          
-        ObservableList<Country> allCountries = FXCollections.observableArrayList();
-        Country countryResult;
+       // ObservableList<Country> allCountries = FXCollections.observableArrayList();
+       // Country countryResult;
+       
         //query
-        String sql = "SELECT* FROM country";
+        String sql = "SELECT* FROM country WHERE country = ? ";
 
         Connection conn = DBConnection.makeConnection(); // making the connection
 
         PreparedStatement prSt = conn.prepareStatement(sql);
+        prSt.setString(1, countryName);
         ResultSet result = prSt.executeQuery();
 
-        if (result != null) {
-
+        if (result.next()) {
+            /**
             while (result.next()) {
                 int countryid = result.getInt("countryId");
                 String country = result.getString("country");
@@ -106,10 +108,17 @@ public class CountryDAOImpl implements CountryDAO {
                 allCountries.add(countryResult);
 
                 return allCountries;
-            }
+                }
+                */
+            DBConnection.closeConnection();
+           
+            return true;
+            
         }
-        DBConnection.closeConnection();
-
-        return null;
+        else{
+           DBConnection.closeConnection();
+           
+           return false;
+        }
     }
 }

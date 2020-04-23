@@ -15,9 +15,9 @@ import javafx.collections.ObservableList;
  */
 public interface AddressDAO {
     
-    public ObservableList<Address> getAllCities() throws SQLException, Exception;
+    public boolean getAllAddress(String address, String address2,int cityId,String postalCode, String phone) throws SQLException, Exception;
     
-    public int getAdressId(String address, String address2) throws SQLException, Exception;
+    public int getAdressId(String address, String address2,int cityId,String postalCode, String phone) throws SQLException, Exception;
     
     public void insertAddress (String addres1, String address2, int CityId, 
             String postalCode, String phone, String userName )  throws SQLException, Exception;

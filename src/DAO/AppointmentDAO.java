@@ -18,18 +18,20 @@ import javafx.collections.ObservableList;
  */
 public interface AppointmentDAO {
     
-    public void insertAppointment ()throws SQLException, Exception; 
+    public void insertAppointment (int customerId, int userId, String title, String notes,
+            String location,String contact, String type, Timestamp start, Timestamp end, String userName)throws SQLException, Exception; 
     
     public void deleteAppointment(int appointmentId) throws SQLException, Exception;
     
-    public Appointment selectedAppointment (String type,int customerId, Timestamp dateTime )throws SQLException, Exception;
+    public Appointment selectedAppointment (int appointmentId)throws SQLException, Exception;
     
     public ObservableList<Appointment> getAllAppointments ()throws SQLException, Exception;
     
-    public ObservableList<Appointment> selectedDates (LocalDate toDate, LocalDate fromDate)throws SQLException, Exception;
+    public ObservableList<Appointment> selectedDatesAndTime (Timestamp toDate, Timestamp fromDate)throws SQLException, Exception;
     
-    public boolean checkOverloadAppt (LocalDateTime selectedDateTime)throws SQLException, Exception;
-    // need one to 15 min 
+    public boolean checkOverloadAppt (Timestamp selectedDateTime)throws SQLException, Exception;
+    
+    // public ObservableList<Appointment> getAptm15mim (Timestamp nowTime, Timestamp fromTime)throws SQLException, Exception;
     
     
     

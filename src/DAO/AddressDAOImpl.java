@@ -21,43 +21,44 @@ public class AddressDAOImpl  implements AddressDAO {
 
     /**
      * 
+     * @param address
+     * @param address2
+     * @param cityId
+     * @param phone
+     * @param postalCode
      * @return
      * @throws SQLException
      * @throws Exception 
      */
     @Override
-    public ObservableList<Address> getAllCities() throws SQLException, Exception {
-        ObservableList<Address> allAddress = FXCollections.observableArrayList();
-        Address addressResult;
-        
-        
-        String sql = "SELECT* FROM address"; // query
+    public boolean getAllAddress(String address, String address2, int cityId, String postalCode, String phone) throws SQLException, Exception {
+       
+        String sql = "SELECT* FROM address WHERE address = ?"
+                     + "AND address2 = ? "
+                    + "AND cityId = ? "
+                    + "AND (postalCode = ? "
+                    + "AND phone = ? )"; // query
 
         Connection conn = DBConnection.makeConnection(); // making the connection
 
         PreparedStatement prSt = conn.prepareStatement(sql);
+        prSt.setString(1, address);
+        prSt.setString(2, address2);
+        prSt.setInt(3, cityId);
+        prSt.setString(4, postalCode);
+        prSt.setString(5, phone);
+ 
         ResultSet result = prSt.executeQuery();
 
-        if (result != null) {
-
-            while (result.next()) {
-                int addressid = result.getInt("addressId");
-                String address = result.getString("address");
-                String address2 = result.getString("address2");
-                int cityid = result.getInt("cityId");
-                String postalCode = result.getString("postalCode");
-                String phone = result.getString("phone");
-
-                // save in the Address object
-                addressResult = new Address(addressid, address, address2,cityid,postalCode,phone);
-                allAddress.add(addressResult);
-
-                return allAddress;
-            }
+        if (result.next()) {
+            DBConnection.closeConnection();
+            System.out.println("it is true");
+            return true;
+        } else {
+            DBConnection.closeConnection();
+            System.out.println ("it is false");
+            return false;
         }
-        DBConnection.closeConnection();
-
-        return null;
     
     }
     /**
@@ -69,13 +70,22 @@ public class AddressDAOImpl  implements AddressDAO {
      * @throws Exception 
      */
     @Override
-    public int getAdressId(String address, String address2) throws SQLException, Exception {
-         Connection conn= DBConnection.makeConnection(); // making the connection
-        
-        String sql = "SELECT addressId FROM address WHERE address = ? AND address2 = ?";
+    public int getAdressId(String address, String address2, int cityId, String postalCode, String phone) throws SQLException, Exception {
+         
+        String sql = "SELECT* FROM address WHERE address = ?"
+                     + "AND address2 = ? "
+                    + "AND cityId = ? "
+                    + "AND (postalCode = ? "
+                    + "AND phone = ? )"; // query
+
+        Connection conn = DBConnection.makeConnection(); // making the connection
+
         PreparedStatement prSt = conn.prepareStatement(sql);
-        prSt.setString(1,address);
-        prSt.setString(2,address2);
+        prSt.setString(1, address);
+        prSt.setString(2, address2);
+        prSt.setInt(3, cityId);
+        prSt.setString(4, postalCode);
+        prSt.setString(5, phone);
         
         ResultSet result = prSt.executeQuery();
         
@@ -110,7 +120,7 @@ public class AddressDAOImpl  implements AddressDAO {
         Connection conn= DBConnection.makeConnection(); // making the connection
         
         String sql = "INSERT INTO address (address,address2, cityId, postalCode, phone, createDate, createdBy,lastUpdate, lastUpdateBy) "+
-                      "VALUES(?, ?,?,?,?'CURRENT_DATE',?,'CURRENT_TIMESTAMP',?)";
+                      "VALUES(?, ?,?,?,?, CURRENT_DATE() ,?, CURRENT_TIMESTAMP,?)";
         PreparedStatement prSt = conn.prepareStatement(sql);
         prSt.setString(1,address1);
         prSt.setString(2,address2);

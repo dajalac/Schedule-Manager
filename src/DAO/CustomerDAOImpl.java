@@ -33,7 +33,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         Connection conn= DBConnection.makeConnection(); // making the connection
         
         String sql = "INSERT INTO customer (customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy)"+
-                      "VALUES(?,?,1,'CURRENT_DATE',?,'CURRENT_TIMESTAMP',?)";
+                      "VALUES(?,?,1,CURRENT_DATE(),?,CURRENT_TIMESTAMP,?)";
         
         PreparedStatement prSt = conn.prepareStatement(sql);
         prSt.setString(1, customer);
