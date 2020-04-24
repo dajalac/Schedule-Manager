@@ -121,4 +121,34 @@ public class CountryDAOImpl implements CountryDAO {
            return false;
         }
     }
+    
+    /**
+     * 
+     * @param country
+     * @return
+     * @throws SQLException
+     * @throws Exception 
+     */
+    @Override
+    public String getCountryName (int countryId)throws SQLException, Exception{
+        Connection conn= DBConnection.makeConnection(); // making the connection
+        
+        String sql = "SELECT country FROM country WHERE countryId = ?";
+        PreparedStatement prSt = conn.prepareStatement(sql);
+        prSt.setInt(1,countryId);
+        
+        ResultSet result = prSt.executeQuery();
+        
+        if (result != null) {
+
+            while (result.next()) {
+                String country = result.getString("country");
+
+                return country ;
+            }
+        }
+        DBConnection.closeConnection();
+
+        return null ;
+    }
 }

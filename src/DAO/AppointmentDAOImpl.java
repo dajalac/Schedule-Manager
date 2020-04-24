@@ -151,7 +151,7 @@ public class AppointmentDAOImpl implements AppointmentDAO{
         
         ResultSet result = prSt.executeQuery();
         
-        if (result != null) {
+        
 
             while (result.next()) {
                 int apptmtId = result.getInt("appointmentId");
@@ -168,14 +168,14 @@ public class AppointmentDAOImpl implements AppointmentDAO{
                 
                 appointmentResult = new Appointment(apptmtId,customerid,userId,title,description,
                                     location,contact, type, start, end, createdby );
-                allApptmt.add(appointmentResult);
+                allApptmt.addAll(appointmentResult);
                 
-                return allApptmt;
+                
             }
-        }
+        
         DBConnection.closeConnection();
 
-        return null;
+        return allApptmt;
     }
 
     /**

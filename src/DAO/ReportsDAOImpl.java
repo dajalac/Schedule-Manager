@@ -34,7 +34,7 @@ public class ReportsDAOImpl implements ReportsDAO{
         
         ResultSet result = prSt.executeQuery();
         
-        if (result != null) {
+        
 
             while (result.next()) {
                 int month = result.getInt("month");
@@ -42,14 +42,14 @@ public class ReportsDAOImpl implements ReportsDAO{
                 String type = result.getString("type");
                 
                 reportsResult = new Reports (month, apptmNumber, type);
-                allReports.add(reportsResult);
+                allReports.addAll(reportsResult);
                 
                 return allReports;
             }
-        }
+       
         DBConnection.closeConnection();
 
-        return null;
+        return allReports;
     
     }
 
@@ -76,14 +76,14 @@ public class ReportsDAOImpl implements ReportsDAO{
                 String contact = result.getString("contact");
                 
                 reportsResult = new Reports (customerId, start, contact);
-                allReports.add(reportsResult);
+                allReports.addAll(reportsResult);
                 
                 return allReports;
             }
         }
         DBConnection.closeConnection();
 
-        return null;
+        return allReports;
     }
 
     @Override
@@ -110,14 +110,14 @@ public class ReportsDAOImpl implements ReportsDAO{
                 String type = result.getString("type");
                 
                 reportsResult = new Reports (type, customerId, start);
-                allReports.add(reportsResult);
+                allReports.addAll(reportsResult);
                 
                 return allReports;
             }
         }
         DBConnection.closeConnection();
 
-        return null;
+        return allReports;
         
     }
     

@@ -5,10 +5,16 @@
  */
 package View_controller;
 
+import DAO.CustomerDAOImpl;
+import Model.Customer;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,6 +30,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -33,7 +40,7 @@ import javafx.stage.Stage;
  * @author Danielle
  */
 public class MainScreenController implements Initializable {
-
+  
     @FXML
     private Pane customerPane;
     @FXML
@@ -88,13 +95,15 @@ public class MainScreenController implements Initializable {
     private ComboBox<?> MonthCbox;
     @FXML
     private Label appointmentLbl;
+    
+    CustomerDAOImpl customerDAO = new CustomerDAOImpl();
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+      
     }    
 
     @FXML
@@ -111,14 +120,18 @@ public class MainScreenController implements Initializable {
 
     @FXML
     private void updateCustomeAction(ActionEvent event) throws IOException {
+        
+
         // call updade customer screen
-       
-        Parent addProductsRoot = FXMLLoader.load(getClass().getResource("UpdadeCustomer.fxml"));
-        Scene addProductsScene = new Scene(addProductsRoot );
-        Stage addProductsStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        addProductsStage.setScene(addProductsScene);
-        addProductsStage.setTitle("Customer update");
-        addProductsStage.show();
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("UpdadeCustomer.fxml"));
+        root= loader.load();
+        Scene customerScene = new Scene(root );
+        Stage updadeCustomerStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        updadeCustomerStage.setScene(customerScene);
+        updadeCustomerStage.setTitle("Customer update");
+        updadeCustomerStage.show();
+     
     }
 
     @FXML
@@ -171,5 +184,7 @@ public class MainScreenController implements Initializable {
             // show what to do
          }
     }
-    
+   
+   
+  
 }

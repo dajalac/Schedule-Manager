@@ -15,10 +15,12 @@ import javafx.collections.ObservableList;
  */
 public interface CityDAO {
     
-    public boolean getAllCities (String cityName)throws SQLException, Exception;
+    public boolean checkAllCities (String cityName,int countryId )throws SQLException, Exception;
     
-    public int getCityId(String cityName)throws SQLException, Exception;
+    public int getCityId(String cityName, int countryId)throws SQLException, Exception;
     
     public void newCity (String city,String userName, int countryId )throws SQLException, Exception;
+    
+    public City selectedCity (int cityId)throws SQLException, Exception;
     
 }

@@ -22,19 +22,22 @@ public class CityDAOImpl implements CityDAO {
     /**
      * 
      * @param cityName
+     * @param countryId
      * @return
      * @throws SQLException
      * @throws Exception 
      */
     @Override
-    public boolean getAllCities(String cityName) throws SQLException, Exception {
+    public boolean checkAllCities(String cityName , int countryId) throws SQLException, Exception {
         
-        String sql = "SELECT* FROM city WHERE city = ? "; // query
+        String sql = "SELECT* FROM city WHERE city = ? AND countryId = ? "; // query
 
         Connection conn = DBConnection.makeConnection(); // making the connection
 
         PreparedStatement prSt = conn.prepareStatement(sql);
         prSt.setString(1, cityName);
+        prSt.setInt(2, countryId);
+        
         ResultSet result = prSt.executeQuery();
 
      
@@ -59,13 +62,14 @@ public class CityDAOImpl implements CityDAO {
      * @throws Exception 
      */
     @Override
-    public int getCityId(String cityName) throws SQLException, Exception {
+    public int getCityId(String cityName, int countryId) throws SQLException, Exception {
         
         Connection conn= DBConnection.makeConnection(); // making the connection
         
-        String sql = "SELECT cityId FROM city WHERE city = ?";
+        String sql = "SELECT cityId FROM city WHERE city = ? AND countryId = ?";
         PreparedStatement prSt = conn.prepareStatement(sql);
         prSt.setString(1,cityName);
+        prSt.setInt(2, countryId);
         
         ResultSet result = prSt.executeQuery();
         
@@ -108,4 +112,38 @@ public class CityDAOImpl implements CityDAO {
         DBConnection.closeConnection();
     }
     
+    /**
+     * 
+     * @param cityId
+     * @return
+     * @throws SQLException
+     * @throws Exception 
+     */
+    @Override
+    public City selectedCity (int cityId)throws SQLException, Exception{
+        Connection conn= DBConnection.makeConnection(); // making the connection
+        City cityResult; 
+        
+        String sql = "SELECT* FROM city WHERE cityId = ?";
+        PreparedStatement prSt = conn.prepareStatement(sql);
+        prSt.setInt(1,cityId);
+        
+        ResultSet result = prSt.executeQuery();
+        
+        if (result != null) {
+
+            while (result.next()) {
+                String cityName = result.getString("city");
+                int countryId = result.getInt("countryId");
+                
+                cityResult = new City (cityName, countryId);
+                return cityResult ;
+            }
+        }
+        DBConnection.closeConnection();
+
+        return null;
+        
+        
+    }
 }

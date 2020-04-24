@@ -135,48 +135,37 @@ public class AddressDAOImpl  implements AddressDAO {
         DBConnection.closeConnection();
     
     }
-
-    /**
-     * 
-     * @param addressId
-     * @param address1
-     * @param address2
-     * @param cityId
-     * @param postalCode
-     * @param phone
-     * @param userName
-     * @throws SQLException
-     * @throws Exception 
-     */
+/**
+ * 
+ * @param addressId
+ * @return
+ * @throws SQLException
+ * @throws Exception 
+ */
     @Override
-    public void updatAddress(int addressId, String address1, String address2, int cityId, 
-            String postalCode, String phone, String userName) throws SQLException, Exception {
+    
+    public Address selectedAddress(int addressId) throws SQLException, Exception{
         Connection conn= DBConnection.makeConnection(); // making the connection
-        
-        String sql = "UPDATE address SET "+
-                "address = ? "+
-                "address = ? "+
-                "cityId = ? "+
-                "postalCode = ? "+
-                "phone = ?" +
-                "lastUpdateBy = ? "+
-                "WHERE addressId = ? ";
-        
+        Address addressResult; 
+        String sql = "SELECT * FROM address WHERE addressId = ? ";
         PreparedStatement prSt = conn.prepareStatement(sql);
         
-        prSt.setString(1,address1);
-        prSt.setString(2,address2);
-        prSt.setInt(3, cityId);
-        prSt.setString(4,postalCode);
-        prSt.setString(5,phone);
-        prSt.setString(6,userName);
-        prSt.setInt(7, addressId);
+        prSt.setInt(1,addressId);
+        ResultSet result = prSt.executeQuery();
         
-        prSt.executeUpdate();
+        if (result.next()) {
+            int addressid = result.getInt("addressId");
+            String address = result.getString("address");
+            String address2 = result.getString("address2");
+            int cityId = result.getInt("cityId");
+            String postalCode = result.getString("postalCode");
+            String phone = result.getString("phone");
+            
+            return addressResult = new Address(addressid, address, address2, cityId, postalCode, phone);
+        }
         
-        DBConnection.closeConnection();
-        
-        
+        return null; 
+               
     }
     
     

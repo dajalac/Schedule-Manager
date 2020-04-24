@@ -21,7 +21,6 @@ public interface AddressDAO {
     
     public void insertAddress (String addres1, String address2, int CityId, 
             String postalCode, String phone, String userName )  throws SQLException, Exception;
-    
-    public void updatAddress (int addressId, String address1, String address2, int cityId, 
-            String postalCode, String phone, String userName) throws SQLException, Exception;
+
+    public Address selectedAddress(int addressId) throws SQLException, Exception;
 }

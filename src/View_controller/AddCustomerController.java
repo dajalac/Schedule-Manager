@@ -168,9 +168,10 @@ public class AddCustomerController implements Initializable {
         int postalCodeInt = 0; 
         int phoneNumberInt = 0; 
    
-        addCountry(userName, countryDAO, countryName, msg);
+         int countryId=addCountry(userName, countryDAO, countryName, msg);
         addCity(userName, countryDAO, cityDAO, countryName,city,msg);
-        int addressId = addAddress(userName, cityDAO, city,phoneNumberInt ,postalCodeInt,msg, address1, address2, addressDAO);
+        int addressId = addAddress(userName, cityDAO, city,phoneNumberInt ,postalCodeInt,
+                         msg, address1, address2, addressDAO,countryId);
         addCustomer (userName, addressId,customerName,customerDAO, msg);        
         
         if( msg.length()!= 0)
@@ -197,7 +198,7 @@ public class AddCustomerController implements Initializable {
      * @param selected
      * @throws Exception 
      */
-    private void addCountry (String userName, CountryDAOImpl countryDAO, String selected,
+    private int addCountry (String userName, CountryDAOImpl countryDAO, String selected,
             StringBuilder msg) throws Exception{
        
         //error message if any country is selected
@@ -214,6 +215,7 @@ public class AddCustomerController implements Initializable {
         } catch (Exception ex) {
             Logger.getLogger(AddCustomerController.class.getName()).log(Level.SEVERE, null, ex);
         }
+       return countryDAO.getCountryId(selected); 
     }
     
     /**
@@ -240,7 +242,7 @@ public class AddCustomerController implements Initializable {
         }
 
         // insert into db 
-        if(!cityDAO.getAllCities(cityName)){
+        if(!cityDAO.checkAllCities(cityName, countryId)){
            cityDAO.newCity(cityName, userName, countryId);
         }
         
@@ -261,9 +263,9 @@ public class AddCustomerController implements Initializable {
      */
     private int addAddress(String userName,CityDAOImpl cityDAO,String cityName, 
                   int phoneInt , int postalCodeInt ,StringBuilder msg,  String address1,
-                  String address2, AddressDAOImpl addressDAO ) throws Exception{
+                  String address2, AddressDAOImpl addressDAO,int countryId ) throws Exception{
         
-        int cityId = cityDAO.getCityId(cityName);
+        int cityId = cityDAO.getCityId(cityName,countryId);
         
         // input validation 
         try{   
@@ -314,8 +316,9 @@ public class AddCustomerController implements Initializable {
             msg.append("Please, insert the customer name");
         }
         if(customerDAO.selectedCustomer(customerName).getCustomerName().isEmpty()){
+            
             customerDAO.insertCustomer(customerName, addressId, userName);
-            System.out.println("customer is empty");
+            
         }
         /**
         else if((!customerDAO.selectedCustomer(customerName).getCustomerName().isEmpty())

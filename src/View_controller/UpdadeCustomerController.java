@@ -5,10 +5,22 @@
  */
 package View_controller;
 
+import DAO.AddressDAOImpl;
+import DAO.CityDAOImpl;
+import DAO.CountryDAOImpl;
+import DAO.CustomerDAOImpl;
+import DAO.UserDAOImpl;
+import Model.Customer;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,6 +36,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -37,7 +50,9 @@ public class UpdadeCustomerController implements Initializable {
     @FXML
     private Pane namePane;
     @FXML
-    private TableView<?> customerTableView;
+    private TableView<Customer> customerTableView;
+    @FXML
+    private TextField nameTxt;
     @FXML
     private TableColumn<?, ?> customerNameColumn;
     @FXML
@@ -57,7 +72,7 @@ public class UpdadeCustomerController implements Initializable {
     @FXML
     private Label countryLbl;
     @FXML
-    private ComboBox<?> countryCbox;
+    private ComboBox<String> countryCbox;
     @FXML
     private Pane namePane112;
     @FXML
@@ -84,18 +99,48 @@ public class UpdadeCustomerController implements Initializable {
     private Label CustomerLbl;
     @FXML
     private Button deleteCustomerBtn;
-
+     
+    CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+    AddressDAOImpl addressDAO = new AddressDAOImpl();
+    CityDAOImpl cityDAO = new CityDAOImpl();
+    CountryDAOImpl countryDAO = new CountryDAOImpl();
+    UserDAOImpl userDAO = new UserDAOImpl();
+    StringBuilder msg2 = new StringBuilder();
+    StringBuilder msg = new StringBuilder();
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        //Customer customer = 
+       
+        // show customers list       
+        ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
+        try {
+            
+            allCustomers.addAll(customerDAO.getAllCustomers());
+        } catch (Exception ex) {
+            Logger.getLogger(UpdadeCustomerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        customerTableView.setItems(allCustomers);
+        
+        
+        // get table view action
+        customerTableView.setOnMouseClicked(( event)->{
+            try {
+                      displaySelected();
+                  } catch (Exception ex) {
+                      Logger.getLogger(UpdadeCustomerController.class.getName()).log(Level.SEVERE, null, ex);
+                  }
+        });
+       
+ 
     }    
 
     @FXML
     private void cancelBtnAction(ActionEvent event) throws IOException {
-       
        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
        alert.setTitle("Confirmation Dialog");
        alert.setHeaderText(null);
@@ -103,17 +148,42 @@ public class UpdadeCustomerController implements Initializable {
        alert.setContentText("Are you sure do you want to cancel this operation?");
 
         Optional<ButtonType> result = alert.showAndWait();
-         if (result.get() == ButtonType.OK)
+         if (result.get() == ButtonType.OK){
+            // show what to do
             goToMain(event);
+         }  
+  
     }
 
     @FXML
-    private void SaveBtnAction(ActionEvent event) {
-    }
-
-    @FXML
-    private void deleteBtnAction(ActionEvent event) throws IOException {
+    private void SaveBtnAction(ActionEvent event) throws Exception {
+        String userName= userDAO.getUserNameId(1).getUserName();
         
+        // GET user input
+        String customerName = nameTxt.getText().trim();
+        String countryName = countryCbox.getValue(); 
+        String city = cityTxt.getText().trim();
+        String address1 = addres1Txt.getText().trim(); 
+        String address2 = addres2Txt.getText().trim();
+        int postalCodeInt = 111111; 
+        int phoneNumberInt = 1111111; 
+        
+        int countryId = updateCountry(userName, countryDAO, countryName, msg);
+        updateCity(userName, countryDAO, cityDAO, countryId,city,msg);
+        int addressId = updateAddress(userName, cityDAO, city,phoneNumberInt ,
+                postalCodeInt,msg, address1, address2, addressDAO, countryId);
+        updateCustomer (userName, addressId,customerName,customerDAO, msg);        
+        
+        if( msg.length()!= 0)
+         errorMessage();
+        
+        goToMain(event);
+        
+    }
+
+    @FXML
+    private void deleteBtnAction(ActionEvent event) throws IOException, Exception {
+       
        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
        alert.setTitle("Confirmation Dialog");
        alert.setHeaderText(null);
@@ -122,12 +192,16 @@ public class UpdadeCustomerController implements Initializable {
 
         Optional<ButtonType> result = alert.showAndWait();
          if (result.get() == ButtonType.OK){
-            // show what to do
+            deleteCustomer();
             goToMain(event);
          }
              
     }
-    
+    /**
+     * 
+     * @param event
+     * @throws IOException 
+     */
     private void goToMain(ActionEvent event) throws IOException{
         Parent root = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
         Scene scene = new Scene(root);
@@ -136,4 +210,226 @@ public class UpdadeCustomerController implements Initializable {
         stage.setTitle("Appointment Scheduler");
         stage.show();  
     }
+    /**
+     * 
+     */
+    private void errorMessage(){
+        Alert a = new Alert(Alert.AlertType.ERROR);
+		a.setContentText(msg.toString());
+		a.setHeaderText(null);
+               
+                Optional<ButtonType> result = a.showAndWait();
+                if (result.get() == ButtonType.OK)
+                    a.close(); 
+    }
+    /**
+     * display selected customer info in the scree
+     * @throws Exception 
+     */
+    private void displaySelected() throws Exception{
+        
+        Customer customer = customerTableView.getSelectionModel().getSelectedItem();
+        if (customer == null){
+            msg.append("Please select one customer \n");
+        }
+        
+        nameTxt.setText(customer.getCustomerName());
+        
+        int aId =customer.getAddressId();
+        String address = addressDAO.selectedAddress(aId).getAddress();
+        addres1Txt.setText(address);
+        
+        String address2 = addressDAO.selectedAddress(aId).getAddress2();
+        int cityId = addressDAO.selectedAddress(aId).getCityId();
+        String city = cityDAO.selectedCity(cityId).getCity();
+        String postalcode = addressDAO.selectedAddress(aId).getPostalCode();
+        String phone = addressDAO.selectedAddress(aId).getPhone();
+        int countryId = cityDAO.selectedCity(cityId).getCountryId();
+        String country = countryDAO.getCountryName(countryId);
+        
+        
+        
+        
+        
+        addres2Txt.setText(address2);
+        cityTxt.setText(city);
+        postalCodeTxt.setText(postalcode);
+        phoneTxt.setText(phone);
+        
+        
+        // display countries options
+        ObservableList<String> countryList =FXCollections.observableArrayList();
+       
+        Locale.setDefault(Locale.US); // my pc keep showing the names in portugueses
+        
+        String[] countryISO = Locale.getISOCountries();
+       
+       for(String countryName : countryISO){
+           Locale locale = new Locale(" ", countryName);
+           String name = locale.getDisplayCountry();
+           countryList.add(name);
+       }
+         countryCbox.setItems(countryList);
+         countryCbox.setValue(country);
+        
+       
+    }
+    /**
+     * Add country in case the user changed the country 
+     * @param userName
+     * @param countryDAO
+     * @param countryName
+     * @param msg 
+     */
+    private int updateCountry(String userName, CountryDAOImpl countryDAO, String countryName,StringBuilder msg) throws Exception{
+        //error message if any country is selected
+
+        if(countryName.equalsIgnoreCase("Select")){
+            msg.append("Please,select one Country \n");  
+        }
+        try {
+            //check if country already exist in bd
+            if(!countryDAO.getAllCountries(countryName)){
+                countryDAO.insertCountry(countryName,userName);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(AddCustomerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return countryDAO.getCountryId(countryName);
+    }
+    
+    /**
+     * Add a new city if the user update to a new city 
+     * @param userName
+     * @param countryDAO
+     * @param cityDAO
+     * @param countryName
+     * @param city
+     * @param msg
+     * @throws Exception 
+     */
+    private void updateCity(String userName, CountryDAOImpl countryDAO, CityDAOImpl cityDAO, int countryId,
+                         String city, StringBuilder msg ) throws Exception{
+        
+        
+        String cityName = " ";
+        
+        //input validation
+        try {
+            cityName = city.substring(0, 1).toUpperCase() + city.substring(1).toLowerCase();// to fomrtat city name entry
+        } catch (StringIndexOutOfBoundsException e) {
+            msg.append("City's name must have at least two characters \n");
+        }
+
+        // insert into db if the user add a differente city
+        if(!cityDAO.checkAllCities(cityName, countryId)){
+           cityDAO.newCity(cityName, userName, countryId);
+        }
+    }
+    
+    /**
+     * 
+     * @param userName
+     * @param cityDAO
+     * @param cityName
+     * @param phoneInt
+     * @param postalCodeInt
+     * @param msg
+     * @param address1
+     * @param address2
+     * @param addressDAO
+     * @return
+     * @throws Exception 
+     */
+    private int updateAddress(String userName,CityDAOImpl cityDAO,String cityName, 
+                  int phoneInt , int postalCodeInt ,StringBuilder msg,  String address1,
+                  String address2, AddressDAOImpl addressDAO, int countryId ) throws Exception{
+        
+        int cityId = cityDAO.getCityId(cityName,countryId);
+        
+        // input validation 
+        try{   
+           postalCodeInt = Integer.parseInt(postalCodeTxt.getText());
+           
+         }
+         catch (NumberFormatException e )
+         {
+           msg.append("The postal code cannot be empty and must contain just numbers \n");     
+         }
+        try{
+           phoneInt = Integer.parseInt(phoneTxt.getText());
+        }
+        catch (NumberFormatException e )
+         {
+           msg.append("The phone number cannot be empty and must contain just numbers \n"); 
+         }
+        if(address1.isEmpty())
+            msg.append("The address cannot be empty.");
+        if(address2.isEmpty())
+            address2 = " ";
+        
+        // insert into db
+        if(! addressDAO.getAllAddress(address1, address2,cityId, Integer.toString(postalCodeInt),
+                    Integer.toString(phoneInt))){
+            
+            addressDAO.insertAddress(address1, address2, cityId, Integer.toString(postalCodeInt),
+                    Integer.toString(phoneInt), userName);
+        }
+        
+        // get address Id
+        int addressId = addressDAO.getAdressId(address1, address2,cityId, Integer.toString(postalCodeInt),
+                    Integer.toString(phoneInt));
+        
+        return addressId;   
+    }
+    
+    /**
+     * 
+     * @param userName
+     * @param addressId
+     * @param customerName
+     * @param customerDAO
+     * @param msg
+     * @throws Exception 
+     */
+    private void updateCustomer (String userName, int addressId,String customerName,
+            CustomerDAOImpl customerDAO, StringBuilder msg) throws Exception{
+        
+        Customer customer = customerTableView.getSelectionModel().getSelectedItem();
+        
+        if(customerName.isEmpty()){
+            msg.append("Please, insert the customer name");
+        }
+        else{
+            customerDAO.UpdateCustomer(customer.getCustomerId(), customerName, addressId, userName);
+        }
+        // update customer 
+        /**
+        if(!customerName.equals(customer.getCustomerName())){
+            customerDAO.UpdateCustomer(customer.getCustomerId(), customerName, addressId, userName);
+        }
+        */
+    }
+    
+    /**
+     * 
+     * @throws Exception 
+     */
+    private void deleteCustomer() throws Exception{
+        
+        Customer customer = customerTableView.getSelectionModel().getSelectedItem();
+        int customerId = customer.getCustomerId();
+        
+        customerDAO.deleteCustomer(customerId);
+        
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+		a.setContentText("User deleted!");
+		a.setHeaderText(null);
+               
+                Optional<ButtonType> result = a.showAndWait();
+                if (result.get() == ButtonType.OK){
+                    a.close();
+                } 
+    }
+    
 }

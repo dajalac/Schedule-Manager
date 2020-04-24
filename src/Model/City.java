@@ -15,9 +15,9 @@ public class City {
     private int countryId;
     private String lastUpdateBy; 
 
-    public City(int cityid, String city) {
-        this.cityId = cityid;
-        this.city = city;
+    public City(String cityName, int countryId) {
+        this.city = cityName;
+        this.countryId = countryId; 
     }
 
     public int getCityId() {

@@ -18,8 +18,8 @@
                      <font>
                         <Font name="Bell MT Bold" size="19.0" />
                      </font></Label>
-                  <Button fx:id="addCustomerBtn" layoutX="90.0" layoutY="79.0" mnemonicParsing="false" onAction="#addCustomerAction" prefHeight="25.0" prefWidth="55.0" text="New" />
-                  <Button fx:id="updateCustomerBtn" layoutX="90.0" layoutY="123.0" mnemonicParsing="false" onAction="#updateCustomeAction" text="Update" />
+                  <Button fx:id="addCustomerBtn" layoutX="90.0" layoutY="78.0" mnemonicParsing="false" onAction="#addCustomerAction" prefHeight="25.0" prefWidth="55.0" text="New" />
+                  <Button fx:id="updateCustomerBtn" layoutX="90.0" layoutY="130.0" mnemonicParsing="false" onAction="#updateCustomeAction" text="Update" />
                </children>
             </Pane>
             <Pane fx:id="reportsPane" prefHeight="282.0" prefWidth="235.0" style="-fx-border-radius: 1; -fx-border-color: grey;">

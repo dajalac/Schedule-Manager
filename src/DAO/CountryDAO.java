@@ -21,5 +21,6 @@ public interface CountryDAO {
     
     public boolean getAllCountries (String countryName)throws SQLException, Exception;
     
+    public String getCountryName (int countryId)throws SQLException, Exception;
    // public boolean checkIfCountryExist(String countryName)throws SQLException, Exception;
 }

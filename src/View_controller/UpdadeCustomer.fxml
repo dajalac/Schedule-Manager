@@ -7,17 +7,44 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="498.0" prefWidth="571.0" styleClass="appbg" stylesheets="@../images/Style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_controller.UpdadeCustomerController">
+<AnchorPane id="AnchorPane" prefHeight="585.0" prefWidth="571.0" styleClass="appbg" stylesheets="@../images/Style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_controller.UpdadeCustomerController">
    <children>
-      <VBox layoutX="96.0" layoutY="35.0" prefHeight="406.0" prefWidth="368.0" style="-fx-background-color: #FFFAFA;">
+      <VBox layoutX="96.0" layoutY="35.0" prefHeight="144.0" prefWidth="368.0" style="-fx-background-color: #FFFAFA;">
          <children>
-            <Pane fx:id="namePane" prefHeight="109.0" prefWidth="368.0">
+            <Pane fx:id="namePane" prefHeight="140.0" prefWidth="368.0">
                <children>
-                  <TableView fx:id="customerTableView" layoutX="82.0" layoutY="6.0" prefHeight="88.0" prefWidth="216.0">
+                  <TableView fx:id="customerTableView" layoutX="94.0" layoutY="7.0" prefHeight="119.0" prefWidth="226.0">
                     <columns>
-                      <TableColumn fx:id="customerNameColumn" prefWidth="215.0" text="Customer" />
+                      <TableColumn fx:id="customerNameColumn" maxWidth="1.7976931348623157E308" prefWidth="225.0" style="-fx-alignment: CENTER;" text="Select one customer" />
                     </columns>
                   </TableView>
+                  <Label layoutX="93.0" layoutY="124.0" text="NOTE:  My take few seconds to load the fiealds" textFill="#363434">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+         </children>
+      </VBox>
+      <Button fx:id="addCustomerCancelBtn" layoutX="106.0" layoutY="530.0" mnemonicParsing="false" onAction="#cancelBtnAction" prefHeight="25.0" prefWidth="89.0" text="Cancel" />
+      <Button fx:id="saveCustomerBtn" layoutX="375.0" layoutY="530.0" mnemonicParsing="false" onAction="#SaveBtnAction" prefHeight="25.0" prefWidth="89.0" text="Save" />
+      <Label fx:id="CustomerLbl" layoutX="74.0" layoutY="8.0" text="Customer update">
+         <font>
+            <Font name="Bell MT Bold" size="16.0" />
+         </font>
+      </Label>
+      <Button fx:id="deleteCustomerBtn" layoutX="236.0" layoutY="530.0" mnemonicParsing="false" onAction="#deleteBtnAction" prefHeight="25.0" prefWidth="89.0" text="Delete" />
+      <VBox layoutX="96.0" layoutY="174.0" prefHeight="349.0" prefWidth="368.0" style="-fx-background-color: #FFFAFA;">
+         <children>
+            <Pane fx:id="namePane2" prefHeight="57.0" prefWidth="379.0">
+               <children>
+                  <Label fx:id="nameLbl" layoutX="31.0" layoutY="20.0" text="Name :">
+                     <font>
+                        <Font name="Bell MT" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="nameTxt" layoutX="85.0" layoutY="16.0" prefHeight="25.0" prefWidth="258.0" />
                </children>
             </Pane>
             <Pane fx:id="namePane1" prefHeight="57.0" prefWidth="379.0">
@@ -82,13 +109,5 @@
             </Pane>
          </children>
       </VBox>
-      <Button fx:id="addCustomerCancelBtn" layoutX="104.0" layoutY="450.0" mnemonicParsing="false" onAction="#cancelBtnAction" prefHeight="25.0" prefWidth="89.0" text="Cancel" />
-      <Button fx:id="saveCustomerBtn" layoutX="370.0" layoutY="450.0" mnemonicParsing="false" onAction="#SaveBtnAction" prefHeight="25.0" prefWidth="89.0" text="Save" />
-      <Label fx:id="CustomerLbl" layoutX="74.0" layoutY="8.0" text="Customer update">
-         <font>
-            <Font name="Bell MT Bold" size="16.0" />
-         </font>
-      </Label>
-      <Button fx:id="deleteCustomerBtn" layoutX="236.0" layoutY="450.0" mnemonicParsing="false" onAction="#deleteBtnAction" prefHeight="25.0" prefWidth="89.0" text="Delete" />
    </children>
 </AnchorPane>

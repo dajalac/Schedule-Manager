@@ -61,8 +61,8 @@ public class CustomerDAOImpl implements CustomerDAO {
         Connection conn= DBConnection.makeConnection(); // making the connection
         
         String sql = "UPDATE customer SET "+
-                "customerName = ? " + 
-                "addressId = ? "+
+                "customerName = ? , " + 
+                "addressId = ? , "+
                 "lastUpdateBy = ? "+
                 "WHERE customerId = ?";
         
@@ -131,30 +131,27 @@ public class CustomerDAOImpl implements CustomerDAO {
         
         Customer customerResult; 
         
-        String sql = "SELECT customerId, customerName, addressId FROM customer WHERE customerName = ? ";
+        String sql = "SELECT customerId, customerName, addressId FROM customer";
         
         PreparedStatement prSt = conn.prepareStatement(sql);
        
         
          ResultSet result = prSt.executeQuery();
          
-          if (result != null) {
-
             while (result.next()) {
-                int customerId = result.getInt("customerId ");
+                int customerId = result.getInt("customerId");
                 String customer = result.getString("customerName");
                 int addressId = result.getInt("addressId");
                
                 // save in the Address object
                 customerResult = new Customer(customerId, customer, addressId);
-                allCustomers.add(customerResult);
+                allCustomers.addAll(customerResult);
 
-                return allCustomers;
             }
-        }
+        
         DBConnection.closeConnection();
 
-        return null;
+         return allCustomers;
         
         
     }
@@ -170,7 +167,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         
         Connection conn= DBConnection.makeConnection(); // making the connection
         
-        String sql = "DELETE customer WHERE customerId = ? ";
+        String sql = "DELETE FROM customer WHERE customerId = ? ";
         
         PreparedStatement prSt = conn.prepareStatement(sql);
         prSt.setInt(1,customerId);
