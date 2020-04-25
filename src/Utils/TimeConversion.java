@@ -18,13 +18,11 @@ import java.time.format.DateTimeFormatter;
  * @author Danielle
  */
 public class TimeConversion {
-    
-    // static class
-   // static class TimeConversion{
-        
+      
        // combine data and time from the user pick up, the returned vaulue is passed to toUtc 
-        public  LocalDateTime dateTimeCombine (LocalDate date , String hour, String minutes){
-          
+        public static LocalDateTime dateTimeCombine (LocalDate date , String hour, String minutes){
+            
+         
            LocalDateTime ldt = LocalDateTime.of(date.getYear(),
                    date.getMonthValue(),
                    date.getDayOfMonth(), 
@@ -66,6 +64,7 @@ public class TimeConversion {
            
         }
         
+        // value to display
         public static String utcToLocalTime (Timestamp ts){
             ZoneId zid = ZoneId.systemDefault();
             ZonedDateTime localUtc = ts.toLocalDateTime().atZone(ZoneId.of("UTC"));

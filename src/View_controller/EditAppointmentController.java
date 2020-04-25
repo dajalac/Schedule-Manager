@@ -5,8 +5,13 @@
  */
 package View_controller;
 
+import Model.Appointment;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -35,23 +40,25 @@ public class EditAppointmentController implements Initializable {
     @FXML
     private Label customerNameLbl;
     @FXML
-    private ComboBox<?> customerNameCbox;
+    private ComboBox<String> customerNameCbox;
     @FXML
     private Label serviceLbl;
     @FXML
-    private ComboBox<?> serviceCbox;
+    private ComboBox<String> serviceCbox;
     @FXML
     private Label consultantLbl;
     @FXML
-    private ComboBox<?> consultantCbox;
+    private ComboBox<String> consultantCbox;
     @FXML
     private Label typeLbl;
     @FXML
-    private ComboBox<?> typeCbox;
+    private ComboBox<String> typeCbox;
+    @FXML
+    private ComboBox<String> locationCbox;
     @FXML
     private Label timeLbl;
     @FXML
-    private ComboBox<?> timeCbox;
+    private ComboBox<String> timeCbox;
     @FXML
     private Label dateLbl;
     @FXML
@@ -101,6 +108,29 @@ public class EditAppointmentController implements Initializable {
         stage.setScene(scene);
         stage.setTitle("Appointment Scheduler");
         stage.show();  
+    }
+    
+    public void displayAppointment (Appointment appointment){
+        customerNameCbox.setValue(appointment.getCustomerName());
+        serviceCbox.setValue(appointment.getTitle());
+        consultantCbox.setValue(appointment.getContact());
+        typeCbox.setValue(appointment.getType());
+        locationCbox.setValue(appointment.getLocation());
+        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); // Formate the time
+        LocalDateTime ldt = LocalDateTime.parse(appointment.getStartTime(),formatter);
+        
+        LocalTime lt = ldt.toLocalTime();
+        
+        LocalDate ld = ldt.toLocalDate();
+    
+
+        datePicker.setValue(ld);
+        timeCbox.setValue(lt.toString());
+        descriptionTxtArea.setText(appointment.getDescription());
+        
+        
+        
     }
   
 }

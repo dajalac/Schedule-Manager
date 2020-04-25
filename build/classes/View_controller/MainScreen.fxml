@@ -8,7 +8,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="498.0" prefWidth="1110.0" styleClass="appbg" stylesheets="@../images/Style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_controller.MainScreenController">
+<AnchorPane id="AnchorPane" prefHeight="494.0" prefWidth="1156.0" styleClass="appbg" stylesheets="@../images/Style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_controller.MainScreenController">
    <children>
       <VBox layoutX="6.0" layoutY="5.0" prefHeight="489.0" prefWidth="235.0">
          <children>
@@ -46,17 +46,17 @@
             </Pane>
          </children>
       </VBox>
-      <Pane fx:id="appointmentPane" layoutX="248.0" layoutY="5.0" prefHeight="489.0" prefWidth="856.0" style="-fx-border-radius: 1; -fx-border-color: grey;">
+      <Pane fx:id="appointmentPane" layoutX="248.0" layoutY="5.0" prefHeight="489.0" prefWidth="903.0" style="-fx-border-radius: 1; -fx-border-color: grey;">
          <children>
-            <TableView fx:id="tableViewAppt" layoutX="7.0" layoutY="112.0" prefHeight="288.0" prefWidth="838.0">
+            <TableView fx:id="tableViewAppt" layoutX="7.0" layoutY="112.0" prefHeight="288.0" prefWidth="889.0">
               <columns>
                 <TableColumn fx:id="customerColmn" prefWidth="123.0" text="Customer" />
                 <TableColumn fx:id="titleColmn" minWidth="0.0" prefWidth="94.0" text="Service" />
-                  <TableColumn fx:id="typeColmn" prefWidth="114.0" text="Type" />
-                  <TableColumn fx:id="consultantColmn" prefWidth="134.0" text="Consultant" />
-                  <TableColumn fx:id="descripitonColmn" prefWidth="164.0" text="Descripiton" />
-                  <TableColumn fx:id="dateTimeColmn" prefWidth="108.0" text="Date and Time" />
-                  <TableColumn fx:id="locationColmn" prefWidth="100.0" text="Location" />
+                  <TableColumn fx:id="typeColmn" prefWidth="104.0" text="Type" />
+                  <TableColumn fx:id="consultantColmn" prefWidth="111.0" text="Consultant" />
+                  <TableColumn fx:id="startColmn" prefWidth="174.0" text="Start time" />
+                  <TableColumn fx:id="endColmn" prefWidth="173.0" text="End time" />
+                  <TableColumn fx:id="locationColmn" prefWidth="109.0" text="Location" />
               </columns>
             </TableView>
             <Button fx:id="newAptBtn" layoutX="93.0" layoutY="413.0" mnemonicParsing="false" onAction="#newAptAction" prefHeight="25.0" prefWidth="94.0" text="New" />
@@ -67,11 +67,11 @@
                   <Font name="Bell MT" size="14.0" />
                </font></Label>
             <ComboBox fx:id="showCbox" layoutX="103.0" layoutY="62.0" prefHeight="25.0" prefWidth="123.0" />
-            <Label fx:id="monthLbl" layoutX="317.0" layoutY="66.0" text="Month :">
+            <Label fx:id="monthLbl" layoutX="317.0" layoutY="66.0" text="Month :" visible="false">
                <font>
                   <Font name="Bell MT" size="14.0" />
                </font></Label>
-            <ComboBox fx:id="MonthCbox" layoutX="367.0" layoutY="62.0" prefHeight="25.0" prefWidth="123.0" />
+            <ComboBox fx:id="MonthCbox" layoutX="367.0" layoutY="62.0" prefHeight="25.0" prefWidth="123.0" visible="false" />
             <Label fx:id="appointmentLbl" layoutX="33.0" layoutY="15.0" text="Appointments">
                <font>
                   <Font name="Bell MT Bold" size="19.0" />

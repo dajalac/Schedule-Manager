@@ -5,10 +5,19 @@
  */
 package View_controller;
 
+import DAO.AppointmentDAOImpl;
+import DAO.CustomerDAOImpl;
+import Model.Appointment;
+import Model.Customer;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -35,23 +44,25 @@ public class NewAppointmentController implements Initializable {
     @FXML
     private Label customerNameLbl;
     @FXML
-    private ComboBox<?> customerNameCbox;
+    private ComboBox<String> customerNameCbox;
     @FXML
     private Label serviceLbl;
     @FXML
-    private ComboBox<?> serviceCbox;
+    private ComboBox<String> serviceCbox;
     @FXML
     private Label consultantLbl;
     @FXML
-    private ComboBox<?> consultantCbox;
+    private ComboBox<String> consultantCbox;
     @FXML
     private Label typeLbl;
     @FXML
-    private ComboBox<?> typeCbox;
+    private ComboBox<String> typeCbox;
     @FXML
     private Label timeLbl;
     @FXML
-    private ComboBox<?> timeCbox;
+    private ComboBox<String> timeCbox;
+    @FXML
+    private ComboBox<String> locationCbox;
     @FXML
     private Label dateLbl;
     @FXML
@@ -66,13 +77,46 @@ public class NewAppointmentController implements Initializable {
     private Button saveBtn;
     @FXML
     private Label apptLabl;
+    
+    CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+    AppointmentDAOImpl appointmentDAO = new AppointmentDAOImpl();
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+       //load comboBoxes
+        try {
+            setComboBoxValues();
+            
+        } catch (Exception ex) {
+            Logger.getLogger(NewAppointmentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        // service comboBox action
+        serviceCbox.setOnAction(e -> {
+             String selectedShow = serviceCbox.getValue();
+            try {
+                String selected = serviceCbox.getValue();
+                switch (selected) {
+                    case "Health":
+                        consultantCbox.getItems().clear();
+                        consultantCbox.getItems().addAll("Dr. Meredith Grey", "Dr. Alex Karev", "Dr. Miranda Balley");
+                        break;
+                    case "Beauty":
+                        consultantCbox.getItems().clear();
+                        consultantCbox.getItems().addAll("Katy White", "Valeria Sales", "Rick Johson");
+                        break;
+                    case "Spa":
+                        consultantCbox.getItems().clear();
+                        consultantCbox.getItems().addAll("Zoe Namaste", "Vic Montana", "Simon Park");
+                }
+               
+            } catch (Exception ex) {
+                Logger.getLogger(MainScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
     }    
 
     @FXML
@@ -92,7 +136,21 @@ public class NewAppointmentController implements Initializable {
     }
 
     @FXML
-    private void saveBtnAction(ActionEvent event) {
+    private void saveBtnAction(ActionEvent event) throws Exception {
+        
+        String customerName = customerNameCbox.getValue();
+        String title = serviceCbox.getValue();
+        String type = typeCbox.getValue();
+        String note = descriptionTxtArea.getText();
+        String hour = Integer.toString(timeCbox.getSelectionModel().getSelectedIndex());
+        LocalDate date = datePicker.getValue();
+        String location = locationCbox.getValue();
+        Customer customer = customerDAO.selectedCustomer(customerName);
+        int customerId = customer.getCustomerId();
+        
+        inputValidation(customerName,title,type,hour,date,location);
+        addToDabase(customerId,title,type,hour,date,location,note);
+        
     }
     
     private void goToMain(ActionEvent event) throws IOException{
@@ -102,6 +160,39 @@ public class NewAppointmentController implements Initializable {
         stage.setScene(scene);
         stage.setTitle("Appointment Scheduler");
         stage.show();  
+    }
+    
+    private void  setComboBoxValues() throws Exception{
+        
+        ObservableList<String> allCustomers =FXCollections.observableArrayList();
+       
+        
+        for(Customer customer : customerDAO.getAllCustomers()){
+            allCustomers.add(customer.getCustomerName());
+        }
+        
+        customerNameCbox.setItems(allCustomers);
+        customerNameCbox.setValue("Select");
+        serviceCbox.getItems().addAll("Health", "Beauty", "Spa");
+        serviceCbox.setValue("Select");
+        consultantCbox.getItems().addAll("Choose one service first");
+        consultantCbox.setValue("Select");
+        typeCbox.getItems().addAll("New appointment", "Follow up");
+        typeCbox.setValue("Select");
+        
+        timeCbox.getItems().addAll("00:00","01:00","02:00","03:00","04:00","05:00",
+                "06:00","07:00","08:00","09:00","10:00","11:00",
+                "12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00",
+                "21:00","22:00","23:00");
+        timeCbox.setValue("00:00");
+    }
+    private void inputValidation(String customerName,String title,String type,
+            String hour,LocalDate date,String location){
+        
+    }
+    private void addToDabase(int customerId,String title,String type,String hour,
+            LocalDate date,String location,String note){
+        // get the userId; 
     }
     
 }

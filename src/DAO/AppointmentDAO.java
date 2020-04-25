@@ -8,8 +8,6 @@ package DAO;
 import Model.Appointment;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import javafx.collections.ObservableList;
 
 /**

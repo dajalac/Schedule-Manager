@@ -178,4 +178,29 @@ public class CustomerDAOImpl implements CustomerDAO {
         
         
     }
+    
+    @Override
+    public Customer customerName (int customerId)throws SQLException, Exception{
+        Customer customerResult; 
+        Connection conn= DBConnection.makeConnection(); // making the connection
+        
+        String sql = "SELECT * FROM customer WHERE customerId = ?";
+        
+        PreparedStatement prSt = conn.prepareStatement(sql);
+        prSt.setInt(1, customerId);
+       
+        
+         ResultSet result = prSt.executeQuery();
+         
+            while (result.next()) {
+                int customerid = result.getInt("customerId");
+                String customer = result.getString("customerName");
+                int addressId = result.getInt("addressId");
+               
+                // save in the Address object
+               return customerResult = new Customer(customerid, customer, addressId);
+            }
+          
+        return null; 
+    }
 }

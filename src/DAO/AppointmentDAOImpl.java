@@ -6,13 +6,13 @@
 package DAO;
 
 import Model.Appointment;
+import Model.Customer;
+import Utils.TimeConversion;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -21,7 +21,7 @@ import javafx.collections.ObservableList;
  * @author Danielle
  */
 public class AppointmentDAOImpl implements AppointmentDAO{
-
+        CustomerDAOImpl customerDAO = new CustomerDAOImpl();
    /**
     * 
     * @param customerId
@@ -76,7 +76,7 @@ public class AppointmentDAOImpl implements AppointmentDAO{
         
         Connection conn= DBConnection.makeConnection(); // making the connection
         
-        String sql = "DELETE appointment WHERE appointmentId = ?";
+        String sql = "DELETE FROM appointment WHERE appointmentId = ?";
          PreparedStatement prSt = conn.prepareStatement(sql);
          prSt.setInt(1,appointmentId );
          
@@ -95,7 +95,7 @@ public class AppointmentDAOImpl implements AppointmentDAO{
      */
     @Override
     public Appointment selectedAppointment(int appointmentId) throws SQLException, Exception {
-       
+        Customer customer;
         Appointment appointmentResult;
         Connection conn= DBConnection.makeConnection(); // making the connection
         
@@ -121,9 +121,16 @@ public class AppointmentDAOImpl implements AppointmentDAO{
                 Timestamp end = result.getTimestamp("start");
                 String createdby = result.getString("createdBy");
                 
-
+                // time conversion
+                String startTime = TimeConversion.utcToLocalTime(start);
+                String endTime = TimeConversion.utcToLocalTime(end);
+                
+                // get user name
+                customer = customerDAO.customerName(customerid);
+                String customerName = customer.getCustomerName();
                 appointmentResult = new Appointment(apptmtId,customerid,userId,title,description,
-                                    location,contact, type, start, end, createdby );
+                                    location,contact, type, startTime, endTime, createdby,customerName );
+
                 return appointmentResult ;
             }
         }
@@ -143,6 +150,7 @@ public class AppointmentDAOImpl implements AppointmentDAO{
     public ObservableList<Appointment> getAllAppointments() throws SQLException, Exception {
         ObservableList<Appointment> allApptmt =  FXCollections.observableArrayList();
         Appointment appointmentResult;
+        Customer customer;
         Connection conn= DBConnection.makeConnection(); // making the connection
         
         String sql = "SELECT* FROM appointment" ;
@@ -166,8 +174,14 @@ public class AppointmentDAOImpl implements AppointmentDAO{
                 Timestamp end = result.getTimestamp("start");
                 String createdby = result.getString("createdBy");
                 
+                String startTime = TimeConversion.utcToLocalTime(start);
+                String endTime = TimeConversion.utcToLocalTime(end);
+                
+                // get user name
+                customer = customerDAO.customerName(customerid);
+                String customerName = customer.getCustomerName();
                 appointmentResult = new Appointment(apptmtId,customerid,userId,title,description,
-                                    location,contact, type, start, end, createdby );
+                                    location,contact, type, startTime, endTime, createdby,customerName );
                 allApptmt.addAll(appointmentResult);
                 
                 
@@ -190,13 +204,14 @@ public class AppointmentDAOImpl implements AppointmentDAO{
     public ObservableList<Appointment> selectedDatesAndTime (Timestamp toDate, Timestamp fromDate) throws SQLException, Exception {
         ObservableList<Appointment> allApptmt =  FXCollections.observableArrayList();
         Appointment appointmentResult;
+        Customer customer;
         Connection conn= DBConnection.makeConnection(); // making the connection
         
         String sql = "SELECT* FROM appointment WHERE start BETWEEN ? AND ? " ;
         
         PreparedStatement prSt = conn.prepareStatement(sql);
         prSt.setTimestamp(1, toDate);
-        prSt.setTimestamp(1, fromDate);
+        prSt.setTimestamp(2, fromDate);
         
         ResultSet result = prSt.executeQuery();
         
@@ -215,8 +230,17 @@ public class AppointmentDAOImpl implements AppointmentDAO{
                 Timestamp end = result.getTimestamp("start");
                 String createdby = result.getString("createdBy");
                 
+                // convert time
+                String startTime = TimeConversion.utcToLocalTime(start);
+                String endTime = TimeConversion.utcToLocalTime(end);
+                
+                // get the customer
+                // get user name
+                customer = customerDAO.customerName(customerid);
+                String customerName = customer.getCustomerName();
                 appointmentResult = new Appointment(apptmtId,customerid,userId,title,description,
-                                    location,contact, type, start, end, createdby );
+                                    location,contact, type, startTime, endTime, createdby,customerName );
+                
                 allApptmt.add(appointmentResult);
                 
                 return allApptmt;

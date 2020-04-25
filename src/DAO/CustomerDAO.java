@@ -23,5 +23,7 @@ public interface CustomerDAO {
     
     public ObservableList<Customer> getAllCustomers ()throws SQLException, Exception; 
     
-    public void deleteCustomer (int customerId)throws SQLException, Exception; 
+    public void deleteCustomer (int customerId)throws SQLException, Exception;
+    
+    public Customer customerName (int customerId)throws SQLException, Exception;
 }

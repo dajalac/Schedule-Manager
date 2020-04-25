@@ -21,11 +21,15 @@ public class Appointment {
     private String location;
     private String contact; // consultant
     private String type;
-    private Timestamp startTime; 
-    private Timestamp endTime;
-    private String createdBy; 
+    private String startTime; // String because it is already formated
+    private String endTime;
+    private String createdBy;
+    private String customerName;
 
-    public Appointment(int apptmtId, int customerid, int userId, String title, String description, String location, String contact, String type, Timestamp start, Timestamp end, String createdby) {
+ 
+    public Appointment(int apptmtId, int customerid, int userId, String title, 
+            String description, String location, String contact, String type,
+            String start, String end, String createdby, String customerName) {
          this.appointmentId = apptmtId;
          this.customerId = customerid;
          this.userId = userId;
@@ -36,7 +40,8 @@ public class Appointment {
          this.type = type;
          this.startTime = start;
          this.endTime = end;
-         this.createdBy = createdby; 
+         this.createdBy = createdby;
+         this.customerName=customerName;
     }
     
     public int getUserId() {
@@ -111,20 +116,27 @@ public class Appointment {
         this.type = type;
     }
 
-    public Timestamp getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Timestamp startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public Timestamp getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Timestamp endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+     public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
     
     

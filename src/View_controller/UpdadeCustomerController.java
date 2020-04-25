@@ -104,8 +104,7 @@ public class UpdadeCustomerController implements Initializable {
     AddressDAOImpl addressDAO = new AddressDAOImpl();
     CityDAOImpl cityDAO = new CityDAOImpl();
     CountryDAOImpl countryDAO = new CountryDAOImpl();
-    UserDAOImpl userDAO = new UserDAOImpl();
-    StringBuilder msg2 = new StringBuilder();
+    UserDAOImpl userDAO = new UserDAOImpl();   
     StringBuilder msg = new StringBuilder();
     
     /**
@@ -113,8 +112,7 @@ public class UpdadeCustomerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //Customer customer = 
-       
+   
         // show customers list       
         ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
         try {
@@ -131,6 +129,7 @@ public class UpdadeCustomerController implements Initializable {
         customerTableView.setOnMouseClicked(( event)->{
             try {
                       displaySelected();
+                      
                   } catch (Exception ex) {
                       Logger.getLogger(UpdadeCustomerController.class.getName()).log(Level.SEVERE, null, ex);
                   }
@@ -141,23 +140,15 @@ public class UpdadeCustomerController implements Initializable {
 
     @FXML
     private void cancelBtnAction(ActionEvent event) throws IOException {
-       Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-       alert.setTitle("Confirmation Dialog");
-       alert.setHeaderText(null);
-       
-       alert.setContentText("Are you sure do you want to cancel this operation?");
-
-        Optional<ButtonType> result = alert.showAndWait();
-         if (result.get() == ButtonType.OK){
-            // show what to do
+            
             goToMain(event);
-         }  
-  
+          
     }
 
     @FXML
     private void SaveBtnAction(ActionEvent event) throws Exception {
         String userName= userDAO.getUserNameId(1).getUserName();
+        boolean flag = true; 
         
         // GET user input
         String customerName = nameTxt.getText().trim();
@@ -167,17 +158,29 @@ public class UpdadeCustomerController implements Initializable {
         String address2 = addres2Txt.getText().trim();
         int postalCodeInt = 111111; 
         int phoneNumberInt = 1111111; 
-        
+      
+      while(flag){
         int countryId = updateCountry(userName, countryDAO, countryName, msg);
         updateCity(userName, countryDAO, cityDAO, countryId,city,msg);
         int addressId = updateAddress(userName, cityDAO, city,phoneNumberInt ,
                 postalCodeInt,msg, address1, address2, addressDAO, countryId);
         updateCustomer (userName, addressId,customerName,customerDAO, msg);        
         
-        if( msg.length()!= 0)
-         errorMessage();
         
-        goToMain(event);
+        if( msg.length()!= 0){
+         errorMessage();
+        }
+        else
+            flag = false; 
+      } 
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+		a.setContentText("Update saved!");
+		a.setHeaderText(null);
+               
+                Optional<ButtonType> result = a.showAndWait();
+                if (result.get() == ButtonType.OK){
+                    a.close();
+                } 
         
     }
 
@@ -233,12 +236,10 @@ public class UpdadeCustomerController implements Initializable {
             msg.append("Please select one customer \n");
         }
         
-        nameTxt.setText(customer.getCustomerName());
+       
         
         int aId =customer.getAddressId();
         String address = addressDAO.selectedAddress(aId).getAddress();
-        addres1Txt.setText(address);
-        
         String address2 = addressDAO.selectedAddress(aId).getAddress2();
         int cityId = addressDAO.selectedAddress(aId).getCityId();
         String city = cityDAO.selectedCity(cityId).getCity();
@@ -249,8 +250,8 @@ public class UpdadeCustomerController implements Initializable {
         
         
         
-        
-        
+        nameTxt.setText(customer.getCustomerName());
+        addres1Txt.setText(address);
         addres2Txt.setText(address2);
         cityTxt.setText(city);
         postalCodeTxt.setText(postalcode);
@@ -403,12 +404,7 @@ public class UpdadeCustomerController implements Initializable {
         else{
             customerDAO.UpdateCustomer(customer.getCustomerId(), customerName, addressId, userName);
         }
-        // update customer 
-        /**
-        if(!customerName.equals(customer.getCustomerName())){
-            customerDAO.UpdateCustomer(customer.getCustomerId(), customerName, addressId, userName);
-        }
-        */
+        
     }
     
     /**
@@ -423,7 +419,7 @@ public class UpdadeCustomerController implements Initializable {
         customerDAO.deleteCustomer(customerId);
         
         Alert a = new Alert(Alert.AlertType.INFORMATION);
-		a.setContentText("User deleted!");
+		a.setContentText("Customer deleted!");
 		a.setHeaderText(null);
                
                 Optional<ButtonType> result = a.showAndWait();
