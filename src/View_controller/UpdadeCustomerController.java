@@ -159,20 +159,21 @@ public class UpdadeCustomerController implements Initializable {
         int postalCodeInt = 111111; 
         int phoneNumberInt = 1111111; 
       
-      while(flag){
+      
         int countryId = updateCountry(userName, countryDAO, countryName, msg);
         updateCity(userName, countryDAO, cityDAO, countryId,city,msg);
         int addressId = updateAddress(userName, cityDAO, city,phoneNumberInt ,
                 postalCodeInt,msg, address1, address2, addressDAO, countryId);
-        updateCustomer (userName, addressId,customerName,customerDAO, msg);        
         
-        
-        if( msg.length()!= 0){
+   
+        if( msg.length()!= 0)
          errorMessage();
-        }
+        
         else
             flag = false; 
-      } 
+        
+        if(!flag){
+        updateCustomer (userName, addressId,customerName,customerDAO, msg);  
         Alert a = new Alert(Alert.AlertType.INFORMATION);
 		a.setContentText("Update saved!");
 		a.setHeaderText(null);
@@ -180,7 +181,9 @@ public class UpdadeCustomerController implements Initializable {
                 Optional<ButtonType> result = a.showAndWait();
                 if (result.get() == ButtonType.OK){
                     a.close();
-                } 
+                    goToMain(event);
+                }
+        }        
         
     }
 
@@ -222,8 +225,10 @@ public class UpdadeCustomerController implements Initializable {
 		a.setHeaderText(null);
                
                 Optional<ButtonType> result = a.showAndWait();
-                if (result.get() == ButtonType.OK)
-                    a.close(); 
+                if (result.get() == ButtonType.OK){
+                    a.close();
+                    msg.setLength(0);
+                }
     }
     /**
      * display selected customer info in the scree

@@ -151,6 +151,8 @@ public class AddCustomerController implements Initializable {
      */
     @FXML
     private void saveBtnAction(ActionEvent event) throws Exception {
+        boolean flag = true;
+        
         UserDAOImpl userDAO = new UserDAOImpl();
         CountryDAOImpl countryDAO = new CountryDAOImpl();
         CityDAOImpl cityDAO = new CityDAOImpl();
@@ -172,10 +174,20 @@ public class AddCustomerController implements Initializable {
         addCity(userName, countryDAO, cityDAO, countryName,city,msg);
         int addressId = addAddress(userName, cityDAO, city,phoneNumberInt ,postalCodeInt,
                          msg, address1, address2, addressDAO,countryId);
-        addCustomer (userName, addressId,customerName,customerDAO, msg);        
+        
+        checkIfCustomerExist(customerDAO, addressId, customerName, msg);
+               
         
         if( msg.length()!= 0)
          errorMessage(msg);
+        else
+            flag = false;
+        
+        if(!flag){
+            addCustomer (userName, addressId,customerName,customerDAO, msg); 
+            clearFields();
+            
+        }
     }
     /**
      * 
@@ -312,25 +324,19 @@ public class AddCustomerController implements Initializable {
     private void addCustomer (String userName, int addressId,String customerName,
             CustomerDAOImpl customerDAO, StringBuilder msg) throws Exception{
         
+        
+        
         if(customerName.isEmpty()){
             msg.append("Please, insert the customer name");
         }
-        if(customerDAO.selectedCustomer(customerName).getCustomerName().isEmpty()){
+        
+        if(customerDAO.selectedCustomer(customerName)== null){ // new name
             
             customerDAO.insertCustomer(customerName, addressId, userName);
             
-        }
-        /**
-        else if((!customerDAO.selectedCustomer(customerName).getCustomerName().isEmpty())
-                &&(customerDAO.selectedCustomer(customerName).getAddressId() != addressId)){
+        } 
             
-            customerDAO.insertCustomer(customerName, addressId, userName);
-            System.out.println("customer is different");
-        }
-        */
-        else{
-            msg.append("The customer already exist in the system");
-        }
+        
     } 
     /**
      * 
@@ -342,7 +348,38 @@ public class AddCustomerController implements Initializable {
 		a.setHeaderText(null);
                
                 Optional<ButtonType> result = a.showAndWait();
-                if (result.get() == ButtonType.OK)
-                    a.close(); 
+                if (result.get() == ButtonType.OK){
+                    a.close();
+                    msg.setLength(0);
+                }
+    }
+    
+    public void clearFields(){
+        
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setContentText("New customer saved!");
+        a.setHeaderText(null);
+
+        Optional<ButtonType> result = a.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            a.close();
+            nameTxt.clear();
+            countryCbox.setValue("Select");
+            cityTxt.clear();
+            addres1Txt.clear();
+            addres2Txt.clear();
+            postalCodeTxt.clear();
+            phoneTxt.clear();
+
+        }
+    }
+    
+    private void checkIfCustomerExist(CustomerDAOImpl customerDAO, int addressId, String customerName, StringBuilder msg) throws Exception {
+
+        System.out.println("here "+ customerName + addressId);
+        if ( customerDAO.selectedCustomer(customerName)!= null &&
+                customerDAO.selectedCustomer(customerName).getAddressId() == addressId) {
+            msg.append("The customer already exist in the system");
+        }
     }
 }

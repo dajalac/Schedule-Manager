@@ -7,18 +7,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="493.0" prefWidth="451.0" styleClass="appbg" stylesheets="@../images/Style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_controller.NewAppointmentController">
+<AnchorPane id="AnchorPane" prefHeight="553.0" prefWidth="451.0" styleClass="appbg" stylesheets="@../images/Style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_controller.NewAppointmentController">
    <children>
-      <VBox layoutX="35.0" layoutY="44.0" prefHeight="385.0" prefWidth="392.0" style="-fx-background-color: #FFFAFA;">
+      <VBox layoutX="35.0" layoutY="44.0" prefHeight="458.0" prefWidth="392.0" style="-fx-background-color: #FFFAFA;">
          <children>
-            <Pane prefHeight="72.0" prefWidth="342.0">
+            <Pane prefHeight="140.0" prefWidth="392.0">
                <children>
-                  <Label fx:id="customerNameLbl" layoutX="34.0" layoutY="28.0" text="Customer :">
-                     <font>
-                        <Font name="Bell MT" size="16.0" />
-                     </font>
-                  </Label>
-                  <ComboBox fx:id="customerNameCbox" layoutX="125.0" layoutY="26.0" prefWidth="150.0" />
+                  <TableView fx:id="customerTableView" layoutX="45.0" layoutY="2.0" prefHeight="121.0" prefWidth="316.0">
+                    <columns>
+                      <TableColumn fx:id="customerIDcolumn" prefWidth="95.0" text="ID" />
+                      <TableColumn fx:id="customerNameColumn" prefWidth="220.0" text="Customer" />
+                    </columns>
+                  </TableView>
                </children>
             </Pane>
             <Pane prefHeight="72.0" prefWidth="342.0">
@@ -85,8 +85,8 @@
             </Pane>
          </children>
       </VBox>
-      <Button fx:id="cancelBtn" layoutX="90.0" layoutY="444.0" mnemonicParsing="false" onAction="#cancelBtnAction" prefHeight="25.0" prefWidth="96.0" text="Cancel" />
-      <Button fx:id="saveBtn" layoutX="280.0" layoutY="444.0" mnemonicParsing="false" onAction="#saveBtnAction" prefHeight="25.0" prefWidth="96.0" text="Save" />
+      <Button fx:id="cancelBtn" layoutX="85.0" layoutY="510.0" mnemonicParsing="false" onAction="#cancelBtnAction" prefHeight="25.0" prefWidth="96.0" text="Back" />
+      <Button fx:id="saveBtn" layoutX="284.0" layoutY="510.0" mnemonicParsing="false" onAction="#saveBtnAction" prefHeight="25.0" prefWidth="96.0" text="Save" />
       <Label fx:id="apptLabl" layoutX="52.0" layoutY="16.0" text="New Appointment">
          <font>
             <Font name="Bell MT Bold" size="16.0" />

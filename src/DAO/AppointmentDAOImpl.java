@@ -89,54 +89,57 @@ public class AppointmentDAOImpl implements AppointmentDAO{
     /**
      * 
      * @param appointmentId
-     * @return
+     * @param customerId
+     * @param userId
+     * @param title
+     * @param notes
+     * @param location
+     * @param contact
+     * @param type
+     * @param start
+     * @param end
+     * @param userName
      * @throws SQLException
      * @throws Exception 
      */
     @Override
-    public Appointment selectedAppointment(int appointmentId) throws SQLException, Exception {
-        Customer customer;
-        Appointment appointmentResult;
+    public void updateAppointment (int appointmentId, int customerId, int userId, String title, String notes,
+            String location,String contact, String type, Timestamp start, Timestamp end, String userName)throws SQLException, Exception{
+        
         Connection conn= DBConnection.makeConnection(); // making the connection
         
-        String sql = "SELECT* FROM appointment WHERE appointmentId = ? ";
+        String sql = "UPDATE appointment SET " 
+                +  " customerId = ?,"
+                + " userId = ?,"
+                + " title = ?,"
+                + " description = ?,"
+                + " location = ?, "
+                + "contact = ?, "
+                + "type = ?, "
+                + "start = ?, "
+                + "end = ?,"
+                + " lastUpdate = CURRENT_TIMESTAMP,"
+                + " lastUpdateby = ? "
+                + "WHERE appointmentId = ?";
         
         PreparedStatement prSt = conn.prepareStatement(sql);
-        prSt.setInt(1,appointmentId );
+         prSt.setInt(1, customerId);
+         prSt.setInt(2, userId);
+         prSt.setString(3, title);
+         prSt.setString(4, notes);
+         prSt.setString(5, location);
+         prSt.setString(6,contact);
+         prSt.setString(7, type);
+         prSt.setTimestamp(8, start);
+         prSt.setTimestamp(9, end);
+         prSt.setString(10, userName);
+         prSt.setInt(11, appointmentId);
+         
+         prSt.executeUpdate();
+         
+         DBConnection.closeConnection();
         
-        ResultSet result = prSt.executeQuery();
-        
-        if (result != null) {
 
-            while (result.next()) {
-                int apptmtId = result.getInt("appointmentId");
-                int customerid =result.getInt("customerId");
-                int userId = result.getInt("userId");
-                String title = result.getString("title");
-                String description = result.getString("description");
-                String location = result.getString("location");
-                String contact = result.getString("contact");
-                String type = result.getString("type");
-                Timestamp start= result.getTimestamp("start");
-                Timestamp end = result.getTimestamp("start");
-                String createdby = result.getString("createdBy");
-                
-                // time conversion
-                String startTime = TimeConversion.utcToLocalTime(start);
-                String endTime = TimeConversion.utcToLocalTime(end);
-                
-                // get user name
-                customer = customerDAO.customerName(customerid);
-                String customerName = customer.getCustomerName();
-                appointmentResult = new Appointment(apptmtId,customerid,userId,title,description,
-                                    location,contact, type, startTime, endTime, createdby,customerName );
-
-                return appointmentResult ;
-            }
-        }
-        DBConnection.closeConnection();
-
-        return null;
         
     }
 
@@ -171,7 +174,7 @@ public class AppointmentDAOImpl implements AppointmentDAO{
                 String contact = result.getString("contact");
                 String type = result.getString("type");
                 Timestamp start= result.getTimestamp("start");
-                Timestamp end = result.getTimestamp("start");
+                Timestamp end = result.getTimestamp("end");
                 String createdby = result.getString("createdBy");
                 
                 String startTime = TimeConversion.utcToLocalTime(start);
@@ -227,7 +230,7 @@ public class AppointmentDAOImpl implements AppointmentDAO{
                 String contact = result.getString("contact");
                 String type = result.getString("type");
                 Timestamp start= result.getTimestamp("start");
-                Timestamp end = result.getTimestamp("start");
+                Timestamp end = result.getTimestamp("end");
                 String createdby = result.getString("createdBy");
                 
                 // convert time
@@ -254,19 +257,28 @@ public class AppointmentDAOImpl implements AppointmentDAO{
     /**
      * 
      * @param selectedDateTime
+     * @param service
+     * @param contact
+     * @param location
      * @return
      * @throws SQLException
      * @throws Exception 
      */
     @Override
-    public boolean checkOverloadAppt(Timestamp selectedDateTime) throws SQLException, Exception {
+    public boolean checkOverloadAppt(Timestamp selectedDateTime, String service, String contact, String location) throws SQLException, Exception {
         
         Connection conn= DBConnection.makeConnection(); // making the connection
         
-        String sql = "SELECT* FROM appointment WHERE start = ?" ;
+        String sql = "SELECT* FROM appointment WHERE start = ?"+
+                "AND title = ? "+
+                "AND (location = ? "
+                + "AND contact = ?)";
         
         PreparedStatement prSt = conn.prepareStatement(sql);
         prSt.setTimestamp(1, selectedDateTime);
+        prSt.setString(2, service);
+        prSt.setString(3, location);
+        prSt.setString(4,contact);
         
         ResultSet result = prSt.executeQuery();
         

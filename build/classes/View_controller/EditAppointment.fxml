@@ -7,18 +7,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="493.0" prefWidth="451.0" styleClass="appbg" stylesheets="@../images/Style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_controller.EditAppointmentController">
+<AnchorPane id="AnchorPane" prefHeight="589.0" prefWidth="451.0" styleClass="appbg" stylesheets="@../images/Style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_controller.EditAppointmentController">
    <children>
-      <VBox layoutX="42.0" layoutY="44.0" prefHeight="385.0" prefWidth="363.0" style="-fx-background-color: #FFFAFA;">
+      <VBox layoutX="42.0" layoutY="44.0" prefHeight="497.0" prefWidth="377.0" style="-fx-background-color: #FFFAFA;">
          <children>
-            <Pane prefHeight="72.0" prefWidth="342.0">
+            <Pane prefHeight="133.0" prefWidth="377.0">
                <children>
-                  <Label fx:id="customerNameLbl" layoutX="34.0" layoutY="28.0" text="Customer :">
-                     <font>
-                        <Font name="Bell MT" size="16.0" />
-                     </font>
-                  </Label>
-                  <ComboBox fx:id="customerNameCbox" layoutX="125.0" layoutY="26.0" prefWidth="150.0" />
+                  <TableView fx:id="customerTableView" layoutX="31.0" layoutY="6.0" prefHeight="121.0" prefWidth="316.0">
+                     <columns>
+                        <TableColumn fx:id="customerIDcolumn" prefWidth="95.0" text="ID" />
+                        <TableColumn fx:id="customerNameColumn" prefWidth="220.0" text="Customer" />
+                     </columns>
+                  </TableView>
                </children>
             </Pane>
             <Pane prefHeight="72.0" prefWidth="342.0">
@@ -43,12 +43,18 @@
             </Pane>
             <Pane prefHeight="72.0" prefWidth="342.0">
                <children>
-                  <Label fx:id="typeLbl" layoutX="68.0" layoutY="28.0" text="Type :">
+                  <Label fx:id="typeLbl" layoutX="6.0" layoutY="22.0" text="Type :">
                      <font>
                         <Font name="Bell MT" size="15.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="typeCbox" layoutX="125.0" layoutY="26.0" prefWidth="150.0" />
+                  <ComboBox fx:id="typeCbox" layoutX="52.0" layoutY="18.0" prefHeight="25.0" prefWidth="113.0" />
+                  <ComboBox fx:id="locationCbox" layoutX="243.0" layoutY="19.0" prefHeight="25.0" prefWidth="118.0" />
+                  <Label fx:id="locationLbl" layoutX="173.0" layoutY="22.0" text="Location :">
+                     <font>
+                        <Font name="Bell MT" size="15.0" />
+                     </font>
+                  </Label>
                </children>
             </Pane>
             <Pane prefHeight="72.0" prefWidth="342.0">
@@ -79,8 +85,8 @@
             </Pane>
          </children>
       </VBox>
-      <Button fx:id="cancelBtn" layoutX="90.0" layoutY="444.0" mnemonicParsing="false" onAction="#cancelBtnAction" prefHeight="25.0" prefWidth="96.0" text="Cancel" />
-      <Button fx:id="saveBtn" layoutX="280.0" layoutY="444.0" mnemonicParsing="false" onAction="#saveBtnAction" prefHeight="25.0" prefWidth="96.0" text="Save" />
+      <Button fx:id="cancelBtn" layoutX="92.0" layoutY="550.0" mnemonicParsing="false" onAction="#cancelBtnAction" prefHeight="25.0" prefWidth="96.0" text="Cancel" />
+      <Button fx:id="saveBtn" layoutX="294.0" layoutY="550.0" mnemonicParsing="false" onAction="#saveBtnAction" prefHeight="25.0" prefWidth="96.0" text="Save" />
       <Label fx:id="apptLabl" layoutX="52.0" layoutY="16.0" text="Appointment update">
          <font>
             <Font name="Bell MT Bold" size="16.0" />

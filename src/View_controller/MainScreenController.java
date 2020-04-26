@@ -211,22 +211,33 @@ public class MainScreenController implements Initializable {
     }
 
     @FXML
-    private void editAptAction(ActionEvent event) throws IOException {
-        
+    private void editAptAction(ActionEvent event) throws IOException, Exception {
+
         Appointment appointment = tableViewAppt.getSelectionModel().getSelectedItem();
         
-        // call appointment update screen
-        Parent root;
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("EditAppointment.fxml"));
-        root= loader.load();
-        Scene scene = new Scene(root );
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.setTitle("Appointment upadate");
-        stage.show();
-        
-        EditAppointmentController controller = loader.getController();
-        controller.displayAppointment(appointment);
+        if (appointment != null) {
+            Parent root;
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EditAppointment.fxml"));
+            root = loader.load();
+            Scene scene = new Scene(root);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.setTitle("Appointment upadate");
+            stage.show();
+
+            EditAppointmentController controller = loader.getController();
+            controller.displayAppointment(appointment);
+        } else {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setContentText("Please select one appointment first");
+            a.setHeaderText(null);
+
+            Optional<ButtonType> result = a.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                a.close();
+            }
+
+        }
         
     }
 
@@ -234,19 +245,33 @@ public class MainScreenController implements Initializable {
     private void deleteAptAction(ActionEvent event) throws Exception {
        
        Appointment appointment = tableViewAppt.getSelectionModel().getSelectedItem();
-       int appointmentId = appointment.getAppointmentId();
-       
-       Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-       alert.setTitle("Confirmation Dialog");
-       alert.setHeaderText(null);
-       
-       alert.setContentText("Are you sure do you want to cancel this appointment?");
+      
+        if (appointment != null) {
+            int appointmentId = appointment.getAppointmentId();
 
-        Optional<ButtonType> result = alert.showAndWait();
-         if (result.get() == ButtonType.OK){
-            appointmentDAO.deleteAppointment(appointmentId);
-            loadAppointments();
-         }
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation Dialog");
+            alert.setHeaderText(null);
+
+            alert.setContentText("Are you sure do you want to cancel this appointment?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                appointmentDAO.deleteAppointment(appointmentId);
+                loadAppointments();
+            }
+        } else {
+
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setContentText("Please select one appointment first");
+            a.setHeaderText(null);
+
+            Optional<ButtonType> result = a.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                a.close();
+
+            }
+        }
     }
     
     /**

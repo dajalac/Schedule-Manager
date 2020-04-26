@@ -21,13 +21,14 @@ public interface AppointmentDAO {
     
     public void deleteAppointment(int appointmentId) throws SQLException, Exception;
     
-    public Appointment selectedAppointment (int appointmentId)throws SQLException, Exception;
+    public void updateAppointment (int appointmentId,int customerId, int userId, String title, String notes,
+            String location,String contact, String type, Timestamp start, Timestamp end, String userName)throws SQLException, Exception;
     
     public ObservableList<Appointment> getAllAppointments ()throws SQLException, Exception;
     
     public ObservableList<Appointment> selectedDatesAndTime (Timestamp toDate, Timestamp fromDate)throws SQLException, Exception;
     
-    public boolean checkOverloadAppt (Timestamp selectedDateTime)throws SQLException, Exception;
+    public boolean checkOverloadAppt (Timestamp selectedDateTime, String service, String contact, String location)throws SQLException, Exception;
     
     // public ObservableList<Appointment> getAptm15mim (Timestamp nowTime, Timestamp fromTime)throws SQLException, Exception;
     

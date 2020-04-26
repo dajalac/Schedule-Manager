@@ -85,6 +85,7 @@ public class CustomerDAOImpl implements CustomerDAO {
      * @throws SQLException
      * @throws Exception 
      */
+    
     @Override
     public Customer selectedCustomer(String customerName) throws SQLException, Exception {
         Connection conn= DBConnection.makeConnection(); // making the connection
@@ -115,6 +116,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         
         
     }
+    
 
     /**
      * 
