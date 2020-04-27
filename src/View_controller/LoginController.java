@@ -5,8 +5,10 @@
  */
 package View_controller;
 
+import DAO.AppointmentDAOImpl;
 import DAO.UserDAO;
 import DAO.UserDAOImpl;
+import Model.Appointment;
 import Model.User;
 import Utils.TimeConversion;
 import java.io.BufferedWriter;
@@ -14,9 +16,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -24,6 +24,8 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -127,13 +129,28 @@ public class LoginController implements Initializable {
      * @throws IOException 
      * calls the main screen
      */
-    private void goToMain(ActionEvent event) throws IOException{
-        Parent root = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
+    private void goToMain(ActionEvent event) throws IOException, Exception{
+        
+        AppointmentDAOImpl appointmentDAO = new AppointmentDAOImpl();
+        LocalDateTime minutesLater = LocalDateTime.now().plusMinutes(15);
+        Timestamp fifteenMinutes = TimeConversion.utcToStore(minutesLater);
+        Timestamp now = TimeConversion.utcToStore(LocalDateTime.now()); 
+        
+        ObservableList<Appointment> allAppointments =FXCollections.observableArrayList();
+    
+         allAppointments.addAll(appointmentDAO.selectedDatesAndTime(now,fifteenMinutes));
+   
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainScreen.fxml"));
+        root = loader.load();
         Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.setTitle("Appointment Scheduler");
         stage.show();  
+        
+        MainScreenController controller = loader.getController();
+        controller.fifteenMinutesAlarm(allAppointments);
     }
     
     /**

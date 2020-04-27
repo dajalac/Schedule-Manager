@@ -21,5 +21,10 @@ public interface ReportsDAO {
     
     public ObservableList<Reports> byCustomers()throws SQLException, Exception;
    
+    public ObservableList<Reports> byChosenMonth(int month)throws SQLException, Exception;
+    
+    public ObservableList<Reports> byChosenConsultant(String consultant)throws SQLException, Exception;
+    
+    public ObservableList<Reports> byChosenCustomer(int customerChoosen)throws SQLException, Exception;
     
 }

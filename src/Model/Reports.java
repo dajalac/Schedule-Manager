@@ -14,26 +14,29 @@ import java.sql.Timestamp;
 public class Reports {
     
     private int month;
+    private String monthName; 
     private int numberOfAppointment;
     private String type;
     private String consultant;
-    private Timestamp dateAndTime;
-    private int customerId; 
+    private String dateAndTime;
+    private int customerId;
+    String customerName; 
 
-    public Reports(int month, int apptmNumber, String type) {
+    public Reports(int month, int apptmNumber, String type, String monthName) {
          this.month = month;
          this.numberOfAppointment = apptmNumber;
          this.type = type; 
+         this.monthName = monthName;
     }
 
-    public Reports(int customerId, Timestamp start, String contact) {
-        this.customerId = customerId;
+    public Reports(String customerName, String start, String contact) {
+        this.customerName =customerName;
         this.dateAndTime = start;
-        this.consultant = contact; 
+        this.consultant = contact;
     }
     
-    public Reports(String type, int customerId, Timestamp start) {
-        this.customerId = customerId;
+    public Reports(String type, String customerName, String start, int customerId) {
+        this.customerName =customerName;
         this.dateAndTime = start;
         this.type = type; 
     }
@@ -71,11 +74,11 @@ public class Reports {
         this.consultant = consultant;
     }
 
-    public Timestamp getDateAndTime() {
+    public String getDateAndTime() {
         return dateAndTime;
     }
 
-    public void setDateAndTime(Timestamp dateAndTime) {
+    public void setDateAndTime(String dateAndTime) {
         this.dateAndTime = dateAndTime;
     }
 
@@ -86,6 +89,26 @@ public class Reports {
     public void setCustomers(int customerId) {
         this.customerId = customerId;
     }
-    
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+     public String getMonthName() {
+        return monthName;
+    }
+
+    public void setMonthName(String monthName) {
+        this.monthName = monthName;
+    }
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
     
 }

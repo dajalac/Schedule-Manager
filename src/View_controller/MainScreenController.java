@@ -8,8 +8,10 @@ package View_controller;
 import DAO.AddressDAOImpl;
 import DAO.AppointmentDAOImpl;
 import DAO.CustomerDAOImpl;
+import DAO.ReportsDAOImpl;
 import Model.Appointment;
 import Model.Customer;
+import Model.Reports;
 import Utils.TimeConversion;
 
 import java.io.IOException;
@@ -45,6 +47,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import javafx.scene.layout.Pane;
@@ -152,6 +155,8 @@ public class MainScreenController implements Initializable {
         });
          
          tableViewEvent(); // table view event handler
+         
+         radiobuttonsEvents();
         
     }    
 
@@ -184,14 +189,39 @@ public class MainScreenController implements Initializable {
     }
 
     @FXML
-    private void showReportsAction(ActionEvent event) throws IOException {
+    private void showReportsAction(ActionEvent event) throws IOException, Exception {
+        
         // call report screen 
-        Parent root = FXMLLoader.load(getClass().getResource("Records.fxml"));
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Records.fxml"));
+         root = loader.load();
         Scene scene = new Scene(root );
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.setTitle("Reports");
         stage.show(); 
+        
+        ObservableList<Reports> reportsList =FXCollections.observableArrayList();
+        ReportsDAOImpl reportsDAO = new ReportsDAOImpl ();
+        String selectedRbutton = null; 
+        
+        if(monthRbtn.isSelected()){
+           reportsList.addAll(reportsDAO.totalyMonth());
+           selectedRbutton = "month";
+        }
+        if(consultantRbtn.isSelected()){
+           reportsList.addAll(reportsDAO.byConsultant());
+           selectedRbutton = "consultant";
+        }
+        if(customerRbtn.isSelected()){
+           reportsList.addAll(reportsDAO.byCustomers());
+           selectedRbutton = "customer";
+        }
+ 
+        RecordsController controller = loader.getController();
+        controller.getReportsList(reportsList, selectedRbutton);
+        
+       
         
         
     }
@@ -298,13 +328,18 @@ public class MainScreenController implements Initializable {
         MonthCbox.getItems().addAll("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
         MonthCbox.setValue("Select");
     }
-    
+    /**
+     * 
+     * @throws Exception 
+     */
     private void showCboxAction () throws Exception{
         
         String selectedShow = showCbox.getValue();
         switch (selectedShow){
             case "This week":
                 showThisWeek();
+                MonthCbox.setVisible(false);
+                monthLbl.setVisible(false);
                 break;
                 
             case "Month":
@@ -313,6 +348,8 @@ public class MainScreenController implements Initializable {
                 break;
             case "All":
                 loadAppointments();
+                MonthCbox.setVisible(false);
+                monthLbl.setVisible(false);
                 break;
         }
         
@@ -369,18 +406,18 @@ public class MainScreenController implements Initializable {
         LocalDateTime firstDaylcdt = TimeConversion.dateTimeCombine(firstOfMonth,"00", "00");
         LocalDateTime lastDaylcdt = TimeConversion.dateTimeCombine(lastDay,"00", "00");
         
-        Timestamp fistDayOfWeekUtc = TimeConversion.utcToStore(firstDaylcdt);
-        Timestamp lastDayOfWeekUtc = TimeConversion.utcToStore(lastDaylcdt);
+        Timestamp fistDayOfMonthUtc = TimeConversion.utcToStore(firstDaylcdt);
+        Timestamp lastDayOfMonthUtc = TimeConversion.utcToStore(lastDaylcdt);
         
         ObservableList<Appointment> appointmentsOfMonth =FXCollections.observableArrayList();
         
         try{
-        appointmentsOfMonth.addAll(appointmentDAO.selectedDatesAndTime(fistDayOfWeekUtc,lastDayOfWeekUtc));
+        appointmentsOfMonth.addAll(appointmentDAO.selectedDatesAndTime(fistDayOfMonthUtc,lastDayOfMonthUtc));
         }
         catch (NullPointerException e){
             tableViewAppt.setPlaceholder(new Label ("There is no appointment for "+ MonthCbox.getValue()));
         }
-        
+       
         populateTableView();
         
         tableViewAppt.setItems(appointmentsOfMonth);
@@ -398,7 +435,9 @@ public class MainScreenController implements Initializable {
         endColmn.setCellValueFactory(new PropertyValueFactory<>("endTime"));
         locationColmn.setCellValueFactory(new PropertyValueFactory<>("location"));
     }
-    
+    /**
+     * 
+     */
     private void tableViewEvent(){
        
         tableViewAppt.setOnMouseClicked(( event)->{
@@ -408,5 +447,31 @@ public class MainScreenController implements Initializable {
         });
     }
    
-  
+    private void radiobuttonsEvents() {
+       
+        // create a toggle group
+        ToggleGroup tg = new ToggleGroup();
+        
+        // add toggle
+        monthRbtn.setToggleGroup(tg);
+        consultantRbtn.setToggleGroup(tg);
+        customerRbtn.setToggleGroup(tg);
+    }
+    
+    public void fifteenMinutesAlarm (ObservableList<Appointment> allAppointments){
+        
+        if(!allAppointments.isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Comming soon");
+            alert.setHeaderText(null);
+            
+            for(Appointment a : allAppointments)
+            alert.setContentText("Customes " + a.getCustomerName() +" has an appointment at "+ a.getStartTime() + " in "+ a.getLocation()+"\n");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                alert.close();
+            }
+        }
+    }
 }

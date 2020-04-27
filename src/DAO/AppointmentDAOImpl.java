@@ -204,7 +204,7 @@ public class AppointmentDAOImpl implements AppointmentDAO{
      * @throws Exception 
      */
     @Override
-    public ObservableList<Appointment> selectedDatesAndTime (Timestamp toDate, Timestamp fromDate) throws SQLException, Exception {
+    public ObservableList<Appointment> selectedDatesAndTime (Timestamp fromDate, Timestamp toDate) throws SQLException, Exception {
         ObservableList<Appointment> allApptmt =  FXCollections.observableArrayList();
         Appointment appointmentResult;
         Customer customer;
@@ -213,12 +213,15 @@ public class AppointmentDAOImpl implements AppointmentDAO{
         String sql = "SELECT* FROM appointment WHERE start BETWEEN ? AND ? " ;
         
         PreparedStatement prSt = conn.prepareStatement(sql);
-        prSt.setTimestamp(1, toDate);
-        prSt.setTimestamp(2, fromDate);
+        prSt.setTimestamp(1, fromDate);
+        prSt.setTimestamp(2, toDate);
+        
+        System.out.println("from date" + fromDate);
+        System.out.println("to date" + toDate);
         
         ResultSet result = prSt.executeQuery();
         
-        if (result != null) {
+        
 
             while (result.next()) {
                 int apptmtId = result.getInt("appointmentId");
@@ -232,26 +235,25 @@ public class AppointmentDAOImpl implements AppointmentDAO{
                 Timestamp start= result.getTimestamp("start");
                 Timestamp end = result.getTimestamp("end");
                 String createdby = result.getString("createdBy");
-                
+               System.out.println(start);
                 // convert time
                 String startTime = TimeConversion.utcToLocalTime(start);
                 String endTime = TimeConversion.utcToLocalTime(end);
                 
                 // get the customer
-                // get user name
                 customer = customerDAO.customerName(customerid);
                 String customerName = customer.getCustomerName();
+                
                 appointmentResult = new Appointment(apptmtId,customerid,userId,title,description,
                                     location,contact, type, startTime, endTime, createdby,customerName );
                 
-                allApptmt.add(appointmentResult);
-                
-                return allApptmt;
-            }
+                allApptmt.addAll(appointmentResult);
+
         }
+          
         DBConnection.closeConnection();
 
-        return null;
+        return allApptmt;
     }
 
     /**

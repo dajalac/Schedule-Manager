@@ -6,10 +6,12 @@
 package View_controller;
 
 import DAO.AddressDAOImpl;
+import DAO.AppointmentDAOImpl;
 import DAO.CityDAOImpl;
 import DAO.CountryDAOImpl;
 import DAO.CustomerDAOImpl;
 import DAO.UserDAOImpl;
+import Model.Appointment;
 import Model.Customer;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -198,8 +200,7 @@ public class UpdadeCustomerController implements Initializable {
 
         Optional<ButtonType> result = alert.showAndWait();
          if (result.get() == ButtonType.OK){
-            deleteCustomer();
-            goToMain(event);
+            deleteCustomer(event);
          }
              
     }
@@ -416,21 +417,45 @@ public class UpdadeCustomerController implements Initializable {
      * 
      * @throws Exception 
      */
-    private void deleteCustomer() throws Exception{
-        
+    private void deleteCustomer(ActionEvent event) throws Exception {
+        boolean flag = false; 
+        AppointmentDAOImpl appointmentDAO = new AppointmentDAOImpl();
+        ObservableList<Appointment> allappointments = FXCollections.observableArrayList();
+        allappointments.addAll(appointmentDAO.getAllAppointments());
+
         Customer customer = customerTableView.getSelectionModel().getSelectedItem();
         int customerId = customer.getCustomerId();
-        
-        customerDAO.deleteCustomer(customerId);
-        
-        Alert a = new Alert(Alert.AlertType.INFORMATION);
-		a.setContentText("Customer deleted!");
-		a.setHeaderText(null);
-               
+       
+        for (Appointment aptmnt : allappointments) {
+            if (aptmnt.getCustomerId() == customerId) {
+                flag = true;
+                Alert a = new Alert(Alert.AlertType.INFORMATION);
+                a.setContentText(customer.getCustomerName() + " has an appontment schedule for : "
+                        + aptmnt.getStartTime() + " at " + aptmnt.getLocation() + "\n Please cancel this appointment before "
+                        + "delete the customer");
+                a.setHeaderText(null);
+
                 Optional<ButtonType> result = a.showAndWait();
-                if (result.get() == ButtonType.OK){
+                if (result.get() == ButtonType.OK) 
                     a.close();
-                } 
+                break;
+                
+            } 
+        }
+        
+        if (!flag) {
+            customerDAO.deleteCustomer(customerId);
+
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
+            a.setContentText("Customer deleted!");
+            a.setHeaderText(null);
+
+            Optional<ButtonType> result = a.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                a.close();
+                goToMain(event);
+            }     
     }
-    
+}  
+
 }
