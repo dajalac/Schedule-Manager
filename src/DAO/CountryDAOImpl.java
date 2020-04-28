@@ -5,13 +5,10 @@
  */
 package DAO;
 
-import Model.Country;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  *
@@ -84,9 +81,7 @@ public class CountryDAOImpl implements CountryDAO {
  */
     @Override
     public boolean getAllCountries(String countryName) throws SQLException, Exception{
-         
-       // ObservableList<Country> allCountries = FXCollections.observableArrayList();
-       // Country countryResult;
+       
        
         //query
         String sql = "SELECT* FROM country WHERE country = ? ";
@@ -98,18 +93,7 @@ public class CountryDAOImpl implements CountryDAO {
         ResultSet result = prSt.executeQuery();
 
         if (result.next()) {
-            /**
-            while (result.next()) {
-                int countryid = result.getInt("countryId");
-                String country = result.getString("country");
-
-                // save in the country object
-                countryResult = new Country(countryid, country);
-                allCountries.add(countryResult);
-
-                return allCountries;
-                }
-                */
+           
             DBConnection.closeConnection();
            
             return true;

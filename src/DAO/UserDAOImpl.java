@@ -52,7 +52,6 @@ public class UserDAOImpl implements UserDAO{
               
               // save in the User object
               // I will have just one user, that's why there is no need to create a list
-             // System.out.print("HERE "+userid + userName + password + act);
 	      userResult= new User(userid, userName, password, act);
 	     
 	      return userResult;

@@ -28,7 +28,7 @@ public interface AppointmentDAO {
     
     public ObservableList<Appointment> selectedDatesAndTime (Timestamp toDate, Timestamp fromDate)throws SQLException, Exception;
     
-    public boolean checkOverloadAppt (Timestamp selectedDateTime, String service, String contact, String location)throws SQLException, Exception;
+    public boolean checkOverloadAppt (Timestamp selectedDateTime, String contact)throws SQLException, Exception;
     
     // public ObservableList<Appointment> getAptm15mim (Timestamp nowTime, Timestamp fromTime)throws SQLException, Exception;
     

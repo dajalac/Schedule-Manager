@@ -43,7 +43,7 @@ public class ReportsDAOImpl implements ReportsDAO{
                 int month = result.getInt("month");
                 int apptmNumber = result.getInt("number");
                 String type = result.getString("type");
-                //Locale.setDefault(Locale.US);
+                
                 String monthName = new DateFormatSymbols().getMonths()[month-1];
                 
                 reportsResult = new Reports (month, apptmNumber, type, monthName);

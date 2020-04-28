@@ -5,16 +5,12 @@
  */
 package View_controller;
 
-import DAO.AddressDAOImpl;
 import DAO.AppointmentDAOImpl;
-import DAO.CustomerDAOImpl;
 import DAO.ReportsDAOImpl;
 import Model.Appointment;
-import Model.Customer;
 import Model.Reports;
 import Utils.CallNewScreen;
 import Utils.TimeConversion;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -32,7 +28,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -50,10 +45,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
-
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import Utils.DisplayTerminal;
 
 /**
  * FXML Controller class
@@ -118,8 +111,7 @@ public class MainScreenController implements Initializable {
     private ComboBox<String> MonthCbox;
     @FXML
     private Label appointmentLbl;
-    
-    //CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+  
     AppointmentDAOImpl appointmentDAO = new AppointmentDAOImpl();
 
     /**
@@ -168,15 +160,6 @@ public class MainScreenController implements Initializable {
         CallNewScreen ns = displayScreen(event);
         ns.displayScreen("AddCustomer.fxml", "New customer");
         
-        /**
-        // call add customer screen 
-        Parent root = FXMLLoader.load(getClass().getResource("AddCustomer.fxml"));
-        Scene scene = new Scene(root );
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.setTitle("New customer");
-        stage.show(); 
-        */
     }
 
     @FXML
@@ -185,18 +168,6 @@ public class MainScreenController implements Initializable {
         CallNewScreen ns = displayScreen(event);
         ns.displayScreen("UpdadeCustomer.fxml", "Customer update");
 
-        /**
-        // call updade customer screen
-        Parent root;
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("UpdadeCustomer.fxml"));
-        root= loader.load();
-        Scene customerScene = new Scene(root );
-        Stage updadeCustomerStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        updadeCustomerStage.setScene(customerScene);
-        updadeCustomerStage.setTitle("Customer update");
-        updadeCustomerStage.show();
-        */
-     
     }
 
     @FXML
@@ -251,15 +222,6 @@ public class MainScreenController implements Initializable {
         CallNewScreen ns = displayScreen(event);
         ns.displayScreen("NewAppointment.fxml", "New appointment");
         
-        /**
-        // call new appointment screen
-        Parent root = FXMLLoader.load(getClass().getResource("NewAppointment.fxml"));
-        Scene scene = new Scene(root );
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.setTitle("New appointment");
-        stage.show(); 
-        */
         
     }
 
@@ -501,14 +463,16 @@ public class MainScreenController implements Initializable {
      */
     public void fifteenMinutesAlarm (ObservableList<Appointment> allAppointments){
         
+        StringBuilder message = new StringBuilder();
         if(!allAppointments.isEmpty()){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Comming soon");
             alert.setHeaderText(null);
             
             for(Appointment a : allAppointments)
-            alert.setContentText("Customes " + a.getCustomerName() +" has an appointment at "+ a.getStartTime() + " in "+ a.getLocation()+"\n");
-
+                message.append("Customer " + a.getCustomerName() +" has an appointment at "+ a.getStartTime() + " in "+ a.getLocation()+"\n");
+                
+            alert.setContentText(message.toString());
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
                 alert.close();

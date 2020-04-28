@@ -312,7 +312,7 @@ public class EditAppointmentController implements Initializable {
             String slot = TimeConversion.utcToLocalTime(apptmentTmz);
 
             if (oldldt != apptmntLdt && !oldLocation.equals(location) && !oldConsultant.equals(contact)) {
-                if (appointmentDAO.checkOverloadAppt(apptmentTmz, title, contact, location)) {
+                if (appointmentDAO.checkOverloadAppt(apptmentTmz,contact)) {
                     msg.append("Our partner " + contact + "is not available during " + slot + " Try another date or time \n");
                 }
             }

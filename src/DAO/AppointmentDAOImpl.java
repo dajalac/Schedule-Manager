@@ -215,14 +215,9 @@ public class AppointmentDAOImpl implements AppointmentDAO{
         PreparedStatement prSt = conn.prepareStatement(sql);
         prSt.setTimestamp(1, fromDate);
         prSt.setTimestamp(2, toDate);
-        
-        System.out.println("from date" + fromDate);
-        System.out.println("to date" + toDate);
-        
+       
         ResultSet result = prSt.executeQuery();
         
-        
-
             while (result.next()) {
                 int apptmtId = result.getInt("appointmentId");
                 int customerid =result.getInt("customerId");
@@ -235,7 +230,7 @@ public class AppointmentDAOImpl implements AppointmentDAO{
                 Timestamp start= result.getTimestamp("start");
                 Timestamp end = result.getTimestamp("end");
                 String createdby = result.getString("createdBy");
-               System.out.println(start);
+               
                 // convert time
                 String startTime = TimeConversion.utcToLocalTime(start);
                 String endTime = TimeConversion.utcToLocalTime(end);
@@ -267,20 +262,16 @@ public class AppointmentDAOImpl implements AppointmentDAO{
      * @throws Exception 
      */
     @Override
-    public boolean checkOverloadAppt(Timestamp selectedDateTime, String service, String contact, String location) throws SQLException, Exception {
+    public boolean checkOverloadAppt(Timestamp selectedDateTime,String contact) throws SQLException, Exception {
         
         Connection conn= DBConnection.makeConnection(); // making the connection
         
         String sql = "SELECT* FROM appointment WHERE start = ?"+
-                "AND title = ? "+
-                "AND (location = ? "
-                + "AND contact = ?)";
+                     "AND contact = ?";
         
         PreparedStatement prSt = conn.prepareStatement(sql);
         prSt.setTimestamp(1, selectedDateTime);
-        prSt.setString(2, service);
-        prSt.setString(3, location);
-        prSt.setString(4,contact);
+        prSt.setString(2,contact);
         
         ResultSet result = prSt.executeQuery();
         

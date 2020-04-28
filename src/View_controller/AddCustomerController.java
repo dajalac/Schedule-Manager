@@ -10,15 +10,8 @@ import DAO.CityDAOImpl;
 import DAO.CountryDAOImpl;
 import DAO.CustomerDAOImpl;
 import DAO.UserDAOImpl;
-import Model.Address;
-import Model.City;
-import Model.Country;
-import Model.Customer;
-import Model.User;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -41,8 +34,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import Utils.DisplayTerminal;
-import Utils.InputValidation;
 
 /**
  * FXML Controller class

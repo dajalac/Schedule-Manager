@@ -39,7 +39,7 @@ public class TimeConversion {
         public static String toUtcString(LocalDateTime ldt){
             ZonedDateTime locZdt = ZonedDateTime.of(ldt, ZoneId.systemDefault());
             ZonedDateTime utcZdt = locZdt.withZoneSameInstant(ZoneOffset.UTC);
-            System.out.println(utcZdt.toString());
+   
             DateTimeFormatter customFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             
             return customFormatter.format(utcZdt);      

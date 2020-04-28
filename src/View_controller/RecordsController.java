@@ -8,7 +8,6 @@ package View_controller;
 import DAO.AppointmentDAOImpl;
 import DAO.CustomerDAOImpl;
 import DAO.ReportsDAOImpl;
-import Model.Appointment;
 import Model.Customer;
 import Model.Reports;
 import java.io.IOException;
@@ -63,65 +62,68 @@ public class RecordsController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-        
-    }    
+
+    }
 
     @FXML
     private void okBtnAction(ActionEvent event) throws IOException {
-        
+
         Parent root = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
         Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.setTitle("Appointment Scheduler");
-        stage.show();  
+        stage.show();
     }
-    
-    public void getReportsList( ObservableList<Reports> reportsList, String selectedRbutton ) throws Exception{
-        
-        switch(selectedRbutton ){
+
+    public void getReportsList(ObservableList<Reports> reportsList, String selectedRbutton) throws Exception {
+
+        switch (selectedRbutton) {
             case "month":
-                displayReportsByMonth(reportsList);               
+                displayReportsByMonth(reportsList);
                 break;
             case "consultant":
-                displayReportsByConsultant(reportsList);            
+                displayReportsByConsultant(reportsList);
                 break;
             case "customer":
-                displayReportsByCustomers(reportsList);            
-                break; 
+                displayReportsByCustomers(reportsList);
+                break;
         }
     }
-    
-    private void displayReportsByMonth(ObservableList<Reports> reportsList){
-        
+
+    private void displayReportsByMonth(ObservableList<Reports> reportsList) {
+
         column1.setText("Month");
         column2.setText("Type");
         column3.setText("Number of appointments");
-        
+
         column1.setCellValueFactory(new PropertyValueFactory<>("monthName"));
         column2.setCellValueFactory(new PropertyValueFactory<>("type"));
         column3.setCellValueFactory(new PropertyValueFactory<>("numberOfAppointment"));
         reportTableView.setItems(reportsList);
-        
-         reportCbox.getItems().addAll("January", "February", "March", "April", "May",
+
+        reportCbox.getItems().addAll("January", "February", "March", "April", "May",
                 "June", "July", "August", "September", "October", "November", "December");
         reportCbox.setValue("All");
-        
+
         //get comboxAction
-        
         reportCbox.setOnAction(e -> {
-            try {   
-                selectedMonth(reportCbox.getSelectionModel().getSelectedIndex()+1 );
+            try {
+                selectedMonth(reportCbox.getSelectionModel().getSelectedIndex() + 1);
             } catch (Exception ex) {
                 Logger.getLogger(RecordsController.class.getName()).log(Level.SEVERE, null, ex);
             }
-           
+
         });
-   
+
     }
-    
-    private void displayReportsByConsultant(ObservableList<Reports> reportsList) throws Exception{
+
+    /**
+     *
+     * @param reportsList
+     * @throws Exception
+     */
+    private void displayReportsByConsultant(ObservableList<Reports> reportsList) throws Exception {
 
         column1.setText("Consultant");
         column2.setText("Customer");
@@ -130,25 +132,25 @@ public class RecordsController implements Initializable {
         column2.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         column3.setCellValueFactory(new PropertyValueFactory<>("dateAndTime"));
         reportTableView.setItems(reportsList);
-  
-         
-        reportCbox.getItems().addAll("Dr. Miranda Balley","Dr. Meredith Grey",
-                "Rick Johson","Dr. Alex Karev","Vic Montana",
-                "Zoe Namaste","Simon Park", "Valeria Sales","Katy White");
-        
+
+        reportCbox.getItems().addAll("Dr. Miranda Balley", "Dr. Meredith Grey",
+                "Rick Johson", "Dr. Alex Karev", "Vic Montana",
+                "Zoe Namaste", "Simon Park", "Valeria Sales", "Katy White");
+
         reportCbox.setValue("All");
-        
+
         //get comboxAction
         reportCbox.setOnAction(e -> {
-            try {   
+            try {
                 selectedConsultant(reportCbox.getValue());
             } catch (Exception ex) {
                 Logger.getLogger(RecordsController.class.getName()).log(Level.SEVERE, null, ex);
             }
-           
+
         });
     }
-    private void displayReportsByCustomers(ObservableList<Reports> reportsList) throws Exception{
+
+    private void displayReportsByCustomers(ObservableList<Reports> reportsList) throws Exception {
         column1.setText("Custumer");
         column2.setText("Type");
         column3.setText("Date and time");
@@ -156,53 +158,63 @@ public class RecordsController implements Initializable {
         column2.setCellValueFactory(new PropertyValueFactory<>("type"));
         column3.setCellValueFactory(new PropertyValueFactory<>("dateAndTime"));
         reportTableView.setItems(reportsList);
-        
-        for(Customer c : customerDAO.getAllCustomers()){
+
+        for (Customer c : customerDAO.getAllCustomers()) {
             reportCbox.getItems().addAll(c.getCustomerName());
         }
-    
-        reportCbox.setValue("All"); 
-        
+
+        reportCbox.setValue("All");
+
         //get comboxAction
         reportCbox.setOnAction(e -> {
-            try {   
+            try {
                 selectedCustomer(reportCbox.getValue());
             } catch (Exception ex) {
                 Logger.getLogger(RecordsController.class.getName()).log(Level.SEVERE, null, ex);
             }
-           
+
         });
-        
+
     }
-    
-    private void selectedMonth(int month) throws Exception{
- 
+
+    /**
+     *
+     * @param month
+     * @throws Exception
+     */
+    private void selectedMonth(int month) throws Exception {
+
         column1.setText("Month");
         column2.setText("Type");
         column3.setText("Number of appointments");
-        
+
         column1.setCellValueFactory(new PropertyValueFactory<>("monthName"));
         column2.setCellValueFactory(new PropertyValueFactory<>("type"));
         column3.setCellValueFactory(new PropertyValueFactory<>("numberOfAppointment"));
-        
+
         if (reportsDAO.byChosenMonth(month).isEmpty()) {
             reportTableView.getItems().clear();
             reportTableView.setPlaceholder(new Label("There is no appointment for the chosen month"));
         } else {
             reportTableView.setItems(reportsDAO.byChosenMonth(month));
-            
+
         }
     }
-    
-    private void selectedConsultant (String consultant) throws Exception{
-        
+
+    /**
+     *
+     * @param consultant
+     * @throws Exception
+     */
+    private void selectedConsultant(String consultant) throws Exception {
+
         column1.setText("Consultant");
         column2.setText("Customer");
         column3.setText("Date and time");
         column1.setCellValueFactory(new PropertyValueFactory<>("consultant"));
         column2.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         column3.setCellValueFactory(new PropertyValueFactory<>("dateAndTime"));
-        
+
         if (reportsDAO.byChosenConsultant(consultant).isEmpty()) {
             reportTableView.getItems().clear();
             reportTableView.setPlaceholder(new Label("There is no appointment for the chosen month"));
@@ -210,26 +222,24 @@ public class RecordsController implements Initializable {
             reportTableView.setItems(reportsDAO.byChosenConsultant(consultant));
         }
     }
-    
-    private void selectedCustomer (String customer) throws Exception{
+
+    private void selectedCustomer(String customer) throws Exception {
         Customer c = customerDAO.selectedCustomer(customer);
         int customerId = c.getCustomerId();
-        
+
         column1.setText("Custumer");
         column2.setText("Type");
         column3.setText("Date and time");
         column1.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         column2.setCellValueFactory(new PropertyValueFactory<>("type"));
         column3.setCellValueFactory(new PropertyValueFactory<>("dateAndTime"));
-        
+
         if (reportsDAO.byChosenCustomer(customerId).isEmpty()) {
             reportTableView.getItems().clear();
             reportTableView.setPlaceholder(new Label("There is no appointment for the chosen customer"));
         } else {
             reportTableView.setItems(reportsDAO.byChosenCustomer(customerId));
         }
-        
-        
-        
+
     }
 }

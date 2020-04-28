@@ -6,7 +6,6 @@
 package View_controller;
 
 import DAO.AppointmentDAOImpl;
-import DAO.UserDAO;
 import DAO.UserDAOImpl;
 import Model.Appointment;
 import Model.User;
@@ -20,10 +19,7 @@ import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -75,7 +71,7 @@ public class LoginController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //Locale.setDefault(Locale.US);
+       // Locale.setDefault(Locale.US);
 
         // to show user icon 
         Image image = new Image("/images/user.png");
@@ -161,13 +157,19 @@ public class LoginController implements Initializable {
              Alert a = new Alert(AlertType.ERROR);
 	        if (Locale.getDefault().getLanguage().equals("pt")){
 		     a.setContentText(rb.getString("message"));// muda texto
+                     a.setHeaderText(null);
+                     a.setTitle(rb.getString("title"));
                 }
                 else{
-		    a.setContentText("User and/or password incorrect. Please, try again!");
+		    a.setContentText("User and/or password incorrect. Please try again!");
 		    a.setHeaderText(null);
+                    a.setTitle("Error");
+                    
                 }
                 Optional<ButtonType> result = a.showAndWait();
                 if (result.get() == ButtonType.OK)
+                    userTxt.clear(); 
+                    passwordTxt.clear();
                     a.close();     
     }
     /**
@@ -204,9 +206,9 @@ public class LoginController implements Initializable {
        
        //write to the file 
        FileWriter writer = new FileWriter("log.txt", true);
-       BufferedWriter buffWriter = new BufferedWriter(writer); 
-       buffWriter.write(msg);
-       buffWriter.close();
+       BufferedWriter buffW = new BufferedWriter(writer); 
+       buffW.write(msg);
+       buffW.close();
         
        // to check without open the TXT file
         Logger logger = Logger.getLogger(LoginController.class.getName());

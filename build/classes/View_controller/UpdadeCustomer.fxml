@@ -18,7 +18,7 @@
                       <TableColumn fx:id="customerNameColumn" maxWidth="1.7976931348623157E308" prefWidth="225.0" style="-fx-alignment: CENTER;" text="Select one customer" />
                     </columns>
                   </TableView>
-                  <Label layoutX="93.0" layoutY="124.0" text="NOTE:  My take few seconds to load the fiealds" textFill="#363434">
+                  <Label layoutX="93.0" layoutY="124.0" text="NOTE:  It my take few seconds to load the fiealds" textFill="#363434">
                      <font>
                         <Font size="11.0" />
                      </font>

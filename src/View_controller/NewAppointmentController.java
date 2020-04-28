@@ -8,7 +8,6 @@ package View_controller;
 import DAO.AppointmentDAOImpl;
 import DAO.CustomerDAOImpl;
 import DAO.UserDAOImpl;
-import Model.Appointment;
 import Model.Customer;
 import Model.User;
 import Utils.InputValidation;
@@ -106,17 +105,17 @@ public class NewAppointmentController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-       //load comboBoxes
+        //load comboBoxes
         try {
             setComboBoxValues();
-            
+
         } catch (Exception ex) {
             Logger.getLogger(NewAppointmentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         // service comboBox action
         serviceCbox.setOnAction(e -> {
-             String selectedShow = serviceCbox.getValue();
+            String selectedShow = serviceCbox.getValue();
             try {
                 String selected = serviceCbox.getValue();
                 switch (selected) {
@@ -132,33 +131,30 @@ public class NewAppointmentController implements Initializable {
                         consultantCbox.getItems().clear();
                         consultantCbox.getItems().addAll("Zoe Namaste", "Vic Montana", "Simon Park");
                 }
-               
+
             } catch (Exception ex) {
                 Logger.getLogger(MainScreenController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-    }    
+    }
 
     @FXML
     private void cancelBtnAction(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-       alert.setTitle("Confirmation Dialog");
-       alert.setHeaderText(null);
-       
-       alert.setContentText("Are you sure do you want to cancel this operation?");
+        alert.setTitle("Confirmation Dialog");
+        alert.setHeaderText(null);
+
+        alert.setContentText("Are you sure do you want to cancel this operation?");
 
         Optional<ButtonType> result = alert.showAndWait();
-         if (result.get() == ButtonType.OK)
+        if (result.get() == ButtonType.OK) {
             goToMain(event);
-        
-        
-        
+        }
+
     }
 
     @FXML
     private void saveBtnAction(ActionEvent event) throws Exception {
-        
-        
 
         String title = serviceCbox.getValue();
         String type = typeCbox.getValue();
@@ -169,43 +165,45 @@ public class NewAppointmentController implements Initializable {
         String location = locationCbox.getValue();
         Customer customer = customerTableView.getSelectionModel().getSelectedItem();
         int customerId = 0;
-        try{
-         customerId = customer.getCustomerId();
-         date = datePicker.getValue();
+        try {
+            customerId = customer.getCustomerId();
+            date = datePicker.getValue();
+        } catch (Exception e) {
         }
-        catch (Exception e){}
 
         inputValidation(title, type, hour, date, location, customerId, contact);
-       
-        if(!flag){
-        addToDabase(customerId, title, type, hour, date, location, note, contact);
 
-        confirmationAndClean();
+        if (!flag) {
+            addToDabase(customerId, title, type, hour, date, location, note, contact);
+
+            confirmationAndClean();
         }
-              
-
-        
-
     }
-    
-    private void goToMain(ActionEvent event) throws IOException{
+
+    /**
+     *
+     * @param event
+     * @throws IOException
+     */
+    private void goToMain(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
         Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.setTitle("Appointment Scheduler");
-        stage.show();  
+        stage.show();
     }
+
     /**
-     * 
-     * @throws Exception 
+     *
+     * @throws Exception
      */
-    
-    private void  setComboBoxValues() throws Exception{
-        
-        ObservableList<Customer> allCustomers =FXCollections.observableArrayList();
+
+    private void setComboBoxValues() throws Exception {
+
+        ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
         allCustomers.addAll(customerDAO.getAllCustomers());
-        
+
         customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         customerIDcolumn.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         customerTableView.setItems(allCustomers);
@@ -218,13 +216,12 @@ public class NewAppointmentController implements Initializable {
         typeCbox.setValue("Select");
         locationCbox.getItems().addAll("Pheonix, Arizona", "New York, New York", "London, England");
         locationCbox.setValue("Select");
-        
-        timeCbox.getItems().addAll("00:00","01:00","02:00","03:00","04:00","05:00",
-                "06:00","07:00","08:00","09:00","10:00","11:00",
-                "12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00",
-                "21:00","22:00","23:00");
+
+        timeCbox.getItems().addAll("00:00", "01:00", "02:00", "03:00", "04:00", "05:00",
+                "06:00", "07:00", "08:00", "09:00", "10:00", "11:00",
+                "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00",
+                "21:00", "22:00", "23:00");
         timeCbox.setValue("00:00");
-        
 
         // to desable past dates   
         LocalDate minDate = LocalDate.now();
@@ -237,22 +234,23 @@ public class NewAppointmentController implements Initializable {
 
             }
         });
-       
+
     }
+
     /**
-     * 
+     *
      * @param title
      * @param type
      * @param hour
      * @param date
      * @param location
-     * @throws Exception 
+     * @throws Exception
      */
-    private void inputValidation(String title,String type,
-            String hour,LocalDate date,String location, int customerId,String contact) throws Exception{
-       
+    private void inputValidation(String title, String type,
+            String hour, LocalDate date, String location, int customerId, String contact) throws Exception {
+
         StringBuilder msg = new StringBuilder();
-        
+
         //Lambda expresion
         //It provide code reuse,I don't need to write the comparasion expression more than once. I also didn't have to create a new method just for it. Which increase the code readability  
         InputValidation iV = (input) -> {
@@ -262,26 +260,30 @@ public class NewAppointmentController implements Initializable {
                 return false;
             }
         };
-        
-        if(customerId ==0)
+
+        if (customerId == 0) {
             msg.append("Select one customer \n");
-     
-        if(iV.inputValidation(title))
+        }
+
+        if (iV.inputValidation(title)) {
             msg.append("Select one Service \n");
-        if(iV.inputValidation(type))
+        }
+        if (iV.inputValidation(type)) {
             msg.append("Select one type of appointment \n");
-        if(iV.inputValidation(location))
+        }
+        if (iV.inputValidation(location)) {
             msg.append("Select one location \n");
-        
+        }
+
         if (date == null) {
             msg.append("Select one date");
-            
+
         } else {
             LocalDateTime apptmntLdt = TimeConversion.dateTimeCombine(date, hour, "00");
             Timestamp apptmentTmz = TimeConversion.utcToStore(apptmntLdt);
             String slot = TimeConversion.utcToLocalTime(apptmentTmz);
 
-            if (appointmentDAO.checkOverloadAppt(apptmentTmz, title, contact, location)) {
+            if (appointmentDAO.checkOverloadAppt(apptmentTmz,contact)) {
                 msg.append("Our partner " + contact + "is not available during " + slot + " Try another date or time \n");
             }
 
@@ -294,14 +296,17 @@ public class NewAppointmentController implements Initializable {
                 msg.append("Due our new police we are operating just over business time (8:00 to 17:00)");
             }
         }
-        
-        if(msg.length()!=0){
-        errorMessage(msg);
-        flag = true;}
-        else{flag= false;} 
+
+        if (msg.length() != 0) {
+            errorMessage(msg);
+            flag = true;
+        } else {
+            flag = false;
+        }
     }
+
     /**
-     * 
+     *
      * @param customerId
      * @param title
      * @param type
@@ -310,60 +315,57 @@ public class NewAppointmentController implements Initializable {
      * @param location
      * @param note
      * @param contact
-     * @throws Exception 
+     * @throws Exception
      */
-    private void addToDabase(int customerId,String title,String type,String hour,
-            LocalDate date,String location,String note,String contact) throws Exception{
-        
+    private void addToDabase(int customerId, String title, String type, String hour,
+            LocalDate date, String location, String note, String contact) throws Exception {
+
         LocalDateTime startLdt = TimeConversion.dateTimeCombine(date, hour, "00");
-        Timestamp  startTmz = TimeConversion.utcToStore(startLdt);
-        
+        Timestamp startTmz = TimeConversion.utcToStore(startLdt);
+
         LocalDateTime endLdt = TimeConversion.dateTimeCombine(date, hour, "55");
-        Timestamp  endTmz = TimeConversion.utcToStore(endLdt);
-        
+        Timestamp endTmz = TimeConversion.utcToStore(endLdt);
+
         User user = userDAO.getUserNameId(1);
         String userName = user.getUserName();
         int userId = user.getUserId();
-        
- 
-        appointmentDAO.insertAppointment(customerId,userId, title, note, location, 
-                contact,type, startTmz, endTmz, userName);
+
+        appointmentDAO.insertAppointment(customerId, userId, title, note, location,
+                contact, type, startTmz, endTmz, userName);
     }
-    
-    private void errorMessage (StringBuilder msg){
+
+    private void errorMessage(StringBuilder msg) {
         Alert a = new Alert(Alert.AlertType.WARNING);
-		a.setContentText(msg.toString());
-		a.setHeaderText(null);
-               
-                Optional<ButtonType> result = a.showAndWait();
-                if (result.get() == ButtonType.OK){
-                    a.close(); 
-                    msg.setLength(0);
-                }
- 
-    }
-     
-    private void confirmationAndClean(){
-        
-       
-            Alert a = new Alert(Alert.AlertType.INFORMATION);
-            a.setContentText("Appointment scheduled");
-            a.setHeaderText(null);
+        a.setContentText(msg.toString());
+        a.setHeaderText(null);
 
-            Optional<ButtonType> result = a.showAndWait();
-            if (result.get() == ButtonType.OK) {
-                a.close();
-
-                serviceCbox.setValue("Select");
-                typeCbox.setValue("Select");
-                descriptionTxtArea.clear();
-                consultantCbox.setValue("Select");
-                datePicker.getEditor().clear();
-                locationCbox.setValue("Select");
-                timeCbox.setValue("00:00");
-
-            }
+        Optional<ButtonType> result = a.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            a.close();
+            msg.setLength(0);
         }
-    
+
+    }
+
+    private void confirmationAndClean() {
+
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setContentText("Appointment scheduled");
+        a.setHeaderText(null);
+
+        Optional<ButtonType> result = a.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            a.close();
+
+            serviceCbox.setValue("Select");
+            typeCbox.setValue("Select");
+            descriptionTxtArea.clear();
+            consultantCbox.setValue("Select");
+            datePicker.getEditor().clear();
+            locationCbox.setValue("Select");
+            timeCbox.setValue("00:00");
+
+        }
+    }
 
 }
