@@ -97,8 +97,8 @@ public class LoginController implements Initializable {
     @FXML
     private void enterBtnAction(ActionEvent event) throws IOException, Exception {
       
-          String userName = userTxt.getText().toLowerCase().trim(); 
-          String password = passwordTxt.getText().toLowerCase().trim();
+          String userName = userTxt.getText().trim(); 
+          String password = passwordTxt.getText().trim();
           
           UserDAOImpl userDaoImpl = new UserDAOImpl();
           User user = userDaoImpl.getUser(userName, password);
@@ -211,23 +211,6 @@ public class LoginController implements Initializable {
        // to check without open the TXT file
         Logger logger = Logger.getLogger(LoginController.class.getName());
         logger.info(msg);
-         
-        
-         
-         
-         
-         
-         
-         
-         
-        
-        /**    
-        Logger logger = Logger.getLogger(userName +"Sucess!");
-        //logger.info("sucess!");
-        FileHandler fh = new FileHandler("log.txt", true);
-        SimpleFormatter sf = new SimpleFormatter();
-        fh.setFormatter(sf);
-        logger.addHandler(fh);
-        */
+
     }
 }

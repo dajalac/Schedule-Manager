@@ -32,7 +32,7 @@ public class UserDAOImpl implements UserDAO{
         User userResult;
         
         //query
-        String sql = "SELECT* FROM user WHERE userName = ? AND password = ?";
+        String sql = "SELECT userId, userName, password, active FROM user WHERE userName = BINARY ? AND password = BINARY ?";
      
         Connection conn= DBConnection.makeConnection(); // making the connection
         
@@ -52,7 +52,7 @@ public class UserDAOImpl implements UserDAO{
               
               // save in the User object
               // I will have just one user, that's why there is no need to create a list
-              System.out.print(userid + userName + password + act);
+             // System.out.print("HERE "+userid + userName + password + act);
 	      userResult= new User(userid, userName, password, act);
 	     
 	      return userResult;

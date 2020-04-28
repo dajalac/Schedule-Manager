@@ -5,6 +5,7 @@
  */
 package DAO;
 
+import Utils.DisplayTerminal;
 import com.mysql.jdbc.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -25,34 +26,39 @@ public class DBConnection {
            static Connection connection;
 
 	// create connection to db
-	
-	public static Connection makeConnection () {
-	    
-            try{
-	      Class.forName(driver);
-	      connection = (Connection)DriverManager.getConnection(DB_URL,username,password);
-	      //System.out.println("connection successful");
-	    }
-	    catch (ClassNotFoundException e){
-	      System.out.println("ERROR" + e.getMessage()); 
-	          }
-	    
-	    catch (SQLException e){
-	      System.out.println("ERROR" + e.getMessage()); 
-	          }
-	    return connection; 
-	} 
-	
+     
+     
+    
+	   public static Connection makeConnection() {
+        // Lambda expression
+        //It avoid the repetition of System.out.println, can be used for debug and can be reused. 
+        DisplayTerminal dT = (msg) -> System.out.println(msg);
+
+        try {
+            Class.forName(driver);
+            connection = (Connection) DriverManager.getConnection(DB_URL, username, password);
+            //dT.showInTerminal("connection successful");
+        } catch (ClassNotFoundException e) {
+            dT.showInTerminal("ERROR" + e.getMessage());
+        } catch (SQLException e) {
+            dT.showInTerminal("ERROR" + e.getMessage());
+
+        }
+        return connection;
+    }
+
 	// to close connection
 	
-	public static void closeConnection () {
-	   
-	   try {
-	   connection.close();
-	  // System.out.println("Connection is closed!");
-	   } 
-	   catch (SQLException e){
-	      System.out.println("ERROR" + e.getMessage()); 
-	          }
+       public static void closeConnection() {
+
+        DisplayTerminal dT = (msg) -> System.out.println(msg);
+        
+        try {
+            connection.close();
+            //dT.showInTerminal("Connection is closed!");
+        } catch (SQLException e) {
+            dT.showInTerminal("ERROR" + e.getMessage());
+
         }
+    }
 }

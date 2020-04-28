@@ -109,6 +109,7 @@ public class RecordsController implements Initializable {
         reportCbox.setValue("All");
         
         //get comboxAction
+        
         reportCbox.setOnAction(e -> {
             try {   
                 selectedMonth(reportCbox.getSelectionModel().getSelectedIndex()+1 );

@@ -161,11 +161,15 @@ public class EditAppointmentController implements Initializable {
         String note = descriptionTxtArea.getText();
         String contact = consultantCbox.getValue();
         String hour = Integer.toString(timeCbox.getSelectionModel().getSelectedIndex());
-        LocalDate date = datePicker.getValue();
+        LocalDate date =null;
         String location = locationCbox.getValue();
         Customer customer = customerTableView.getSelectionModel().getSelectedItem();
-        int customerId = customer.getCustomerId();
-        
+        int customerId = 0;
+        try{
+         customerId = customer.getCustomerId();
+         date = datePicker.getValue();
+        }
+        catch (Exception e){}
 
         inputValidation(title, type, hour, date, location, customerId, contact);
    
@@ -192,7 +196,11 @@ public class EditAppointmentController implements Initializable {
         stage.setTitle("Appointment Scheduler");
         stage.show();  
     }
-    
+    /**
+     * 
+     * @param appointment
+     * @throws Exception 
+     */
     public void displayAppointment (Appointment appointment) throws Exception{
 
         appointmentId= appointment.getAppointmentId();
@@ -296,26 +304,28 @@ public class EditAppointmentController implements Initializable {
             msg.append("Select one type of appointment \n");
         if(location.equals("Select"))
             msg.append("Select one location \n");
-        if (date == null)
-           msg.append("Select one date"); 
-        
-        LocalDateTime apptmntLdt = TimeConversion.dateTimeCombine(date, hour, "00");
-        Timestamp  apptmentTmz = TimeConversion.utcToStore(apptmntLdt);
-        String slot = TimeConversion.utcToLocalTime(apptmentTmz);
-        
-        if (oldldt != apptmntLdt && !oldLocation.equals(location) && !oldConsultant.equals(contact)) {
-            if (appointmentDAO.checkOverloadAppt(apptmentTmz, title, contact, location)) {
-                msg.append("Our partner " + contact + "is not available during " + slot + " Try another date or time \n");
+        if (date == null) {
+            msg.append("Select one date");
+        } else {
+            LocalDateTime apptmntLdt = TimeConversion.dateTimeCombine(date, hour, "00");
+            Timestamp apptmentTmz = TimeConversion.utcToStore(apptmntLdt);
+            String slot = TimeConversion.utcToLocalTime(apptmentTmz);
+
+            if (oldldt != apptmntLdt && !oldLocation.equals(location) && !oldConsultant.equals(contact)) {
+                if (appointmentDAO.checkOverloadAppt(apptmentTmz, title, contact, location)) {
+                    msg.append("Our partner " + contact + "is not available during " + slot + " Try another date or time \n");
+                }
+            }
+
+            LocalDate ld = apptmntLdt.toLocalDate();
+            if (ld.getDayOfWeek() == DayOfWeek.SATURDAY || ld.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                msg.append("Our facilities operate just through Monday to Friday. Select a week day");
+            }
+
+            if (Integer.parseInt(hour) < 8 || Integer.parseInt(hour) > 17) {
+                msg.append("Due our new police we are operating just over business time (8:00 to 17:00)");
             }
         }
-        
-        LocalDate ld =apptmntLdt.toLocalDate();
-        if(ld.getDayOfWeek()==DayOfWeek.SATURDAY || ld.getDayOfWeek()==DayOfWeek.SUNDAY )
-           msg.append("Our facilities operate just through Monday to Friday. Select a week day");
-        
-        if(Integer.parseInt(hour) < 8 || Integer.parseInt(hour)> 17)
-            msg.append("Due our new police we are operating just over business time (8:00 to 17:00)");
-        
         if(msg.length()!=0){
         errorMessage(msg);
         flag = true;}

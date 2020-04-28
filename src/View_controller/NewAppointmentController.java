@@ -11,6 +11,7 @@ import DAO.UserDAOImpl;
 import Model.Appointment;
 import Model.Customer;
 import Model.User;
+import Utils.InputValidation;
 import Utils.TimeConversion;
 import java.io.IOException;
 import java.net.URL;
@@ -164,10 +165,15 @@ public class NewAppointmentController implements Initializable {
         String note = descriptionTxtArea.getText();
         String contact = consultantCbox.getValue();
         String hour = Integer.toString(timeCbox.getSelectionModel().getSelectedIndex());
-        LocalDate date = datePicker.getValue();
+        LocalDate date = null;
         String location = locationCbox.getValue();
         Customer customer = customerTableView.getSelectionModel().getSelectedItem();
-        int customerId = customer.getCustomerId();
+        int customerId = 0;
+        try{
+         customerId = customer.getCustomerId();
+         date = datePicker.getValue();
+        }
+        catch (Exception e){}
 
         inputValidation(title, type, hour, date, location, customerId, contact);
        
@@ -247,33 +253,47 @@ public class NewAppointmentController implements Initializable {
        
         StringBuilder msg = new StringBuilder();
         
+        //Lambda expresion
+        //It provide code reuse,I don't need to write the comparasion expression more than once. I also didn't have to create a new method just for it. Which increase the code readability  
+        InputValidation iV = (input) -> {
+            if (input.equals("Select")) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+        
         if(customerId ==0)
             msg.append("Select one customer \n");
-        if(title.equals("Select"))
+     
+        if(iV.inputValidation(title))
             msg.append("Select one Service \n");
-        if(type.equals("Select"))
+        if(iV.inputValidation(type))
             msg.append("Select one type of appointment \n");
-        if(location.equals("Select"))
+        if(iV.inputValidation(location))
             msg.append("Select one location \n");
-        if (date == null)
-           msg.append("Select one date"); 
         
-        LocalDateTime apptmntLdt = TimeConversion.dateTimeCombine(date, hour, "00");
-        Timestamp  apptmentTmz = TimeConversion.utcToStore(apptmntLdt);
-        String slot = TimeConversion.utcToLocalTime(apptmentTmz);
- 
-        if (appointmentDAO.checkOverloadAppt(apptmentTmz,title,contact,location))
-            msg.append("Our partner "+ contact + "is not available during "+ slot+" Try another date or time \n");           
-        
-        
-        LocalDate ld =apptmntLdt.toLocalDate();
-        if(ld.getDayOfWeek()==DayOfWeek.SATURDAY || ld.getDayOfWeek()==DayOfWeek.SUNDAY )
-           msg.append("Our facilities operate just through Monday to Friday. Select a week day");
-        
-             
-        if(Integer.parseInt(hour) < 8 || Integer.parseInt(hour)> 17)
-            msg.append("Due our new police we are operating just over business time (8:00 to 17:00)");
-        
+        if (date == null) {
+            msg.append("Select one date");
+            
+        } else {
+            LocalDateTime apptmntLdt = TimeConversion.dateTimeCombine(date, hour, "00");
+            Timestamp apptmentTmz = TimeConversion.utcToStore(apptmntLdt);
+            String slot = TimeConversion.utcToLocalTime(apptmentTmz);
+
+            if (appointmentDAO.checkOverloadAppt(apptmentTmz, title, contact, location)) {
+                msg.append("Our partner " + contact + "is not available during " + slot + " Try another date or time \n");
+            }
+
+            LocalDate ld = apptmntLdt.toLocalDate();
+            if (ld.getDayOfWeek() == DayOfWeek.SATURDAY || ld.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                msg.append("Our facilities operate just through Monday to Friday. Select a week day");
+            }
+
+            if (Integer.parseInt(hour) < 8 || Integer.parseInt(hour) > 17) {
+                msg.append("Due our new police we are operating just over business time (8:00 to 17:00)");
+            }
+        }
         
         if(msg.length()!=0){
         errorMessage(msg);

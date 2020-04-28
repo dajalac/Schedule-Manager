@@ -118,26 +118,32 @@ public class UpdadeCustomerController implements Initializable {
         // show customers list       
         ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
         try {
-            
+
             allCustomers.addAll(customerDAO.getAllCustomers());
         } catch (Exception ex) {
             Logger.getLogger(UpdadeCustomerController.class.getName()).log(Level.SEVERE, null, ex);
         }
         customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         customerTableView.setItems(allCustomers);
-        
-        
-        // get table view action
-        customerTableView.setOnMouseClicked(( event)->{
-            try {
-                      displaySelected();
-                      
-                  } catch (Exception ex) {
-                      Logger.getLogger(UpdadeCustomerController.class.getName()).log(Level.SEVERE, null, ex);
-                  }
-        });
        
- 
+        Customer customer = customerTableView.getSelectionModel().getSelectedItem();
+        if (customer == null){
+            saveCustomerBtn.setDisable(true);
+            deleteCustomerBtn.setDisable(true);
+        }
+            
+        // get table view action
+        customerTableView.setOnMouseClicked((event) -> {
+            try {
+                displaySelected();
+                saveCustomerBtn.setDisable(false); 
+                deleteCustomerBtn.setDisable(false);
+            } catch (Exception ex) {
+                Logger.getLogger(UpdadeCustomerController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        
+
     }    
 
     @FXML
@@ -149,9 +155,10 @@ public class UpdadeCustomerController implements Initializable {
 
     @FXML
     private void SaveBtnAction(ActionEvent event) throws Exception {
+        StringBuilder noCustomer = new StringBuilder();
         String userName= userDAO.getUserNameId(1).getUserName();
         boolean flag = true; 
-        
+  
         // GET user input
         String customerName = nameTxt.getText().trim();
         String countryName = countryCbox.getValue(); 
@@ -163,9 +170,7 @@ public class UpdadeCustomerController implements Initializable {
       
       
         int countryId = updateCountry(userName, countryDAO, countryName, msg);
-        updateCity(userName, countryDAO, cityDAO, countryId,city,msg);
-        int addressId = updateAddress(userName, cityDAO, city,phoneNumberInt ,
-                postalCodeInt,msg, address1, address2, addressDAO, countryId);
+        
         
    
         if( msg.length()!= 0)
@@ -175,6 +180,9 @@ public class UpdadeCustomerController implements Initializable {
             flag = false; 
         
         if(!flag){
+        updateCity(userName, countryDAO, cityDAO, countryId,city,msg);
+        int addressId = updateAddress(userName, cityDAO, city,phoneNumberInt ,
+                postalCodeInt,msg, address1, address2, addressDAO, countryId);
         updateCustomer (userName, addressId,customerName,customerDAO, msg);  
         Alert a = new Alert(Alert.AlertType.INFORMATION);
 		a.setContentText("Update saved!");
@@ -238,13 +246,13 @@ public class UpdadeCustomerController implements Initializable {
     private void displaySelected() throws Exception{
         
         Customer customer = customerTableView.getSelectionModel().getSelectedItem();
+        
         if (customer == null){
             msg.append("Please select one customer \n");
         }
         
-       
-        
         int aId =customer.getAddressId();
+        
         String address = addressDAO.selectedAddress(aId).getAddress();
         String address2 = addressDAO.selectedAddress(aId).getAddress2();
         int cityId = addressDAO.selectedAddress(aId).getCityId();
@@ -278,6 +286,7 @@ public class UpdadeCustomerController implements Initializable {
        }
          countryCbox.setItems(countryList);
          countryCbox.setValue(country);
+        
         
        
     }

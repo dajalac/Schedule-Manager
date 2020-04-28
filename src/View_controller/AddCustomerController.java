@@ -41,6 +41,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import Utils.DisplayTerminal;
+import Utils.InputValidation;
 
 /**
  * FXML Controller class
@@ -98,13 +100,13 @@ public class AddCustomerController implements Initializable {
     @FXML
     private Label CustomerLbl;
     
-
     
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
         
        // display countries options
         ObservableList<String> countryList =FXCollections.observableArrayList();
@@ -245,14 +247,14 @@ public class AddCustomerController implements Initializable {
         
         int countryId = countryDAO.getCountryId(countryName);
         String cityName = " ";
-        
+
         //input validation
         try {
             cityName = city.substring(0, 1).toUpperCase() + city.substring(1).toLowerCase();// to fomrtat city name entry
         } catch (StringIndexOutOfBoundsException e) {
             msg.append("City's name must have at least two characters \n");
         }
-
+               
         // insert into db 
         if(!cityDAO.checkAllCities(cityName, countryId)){
            cityDAO.newCity(cityName, userName, countryId);
@@ -277,41 +279,39 @@ public class AddCustomerController implements Initializable {
                   int phoneInt , int postalCodeInt ,StringBuilder msg,  String address1,
                   String address2, AddressDAOImpl addressDAO,int countryId ) throws Exception{
         
-        int cityId = cityDAO.getCityId(cityName,countryId);
-        
+        int cityId = cityDAO.getCityId(cityName, countryId);
+
         // input validation 
-        try{   
-           postalCodeInt = Integer.parseInt(postalCodeTxt.getText());
-           
-         }
-         catch (NumberFormatException e )
-         {
-           msg.append("The postal code cannot be empty and must contain just numbers \n");     
-         }
-        try{
-           phoneInt = Integer.parseInt(phoneTxt.getText());
+        try {
+            postalCodeInt = Integer.parseInt(postalCodeTxt.getText());
+
+        } catch (NumberFormatException e) {
+            msg.append("The postal code cannot be empty and must contain just numbers \n");
         }
-        catch (NumberFormatException e )
-         {
-           msg.append("The phone number cannot be empty and must contain just numbers \n"); 
-         }
-        if(address1.isEmpty())
+        try {
+            phoneInt = Integer.parseInt(phoneTxt.getText());
+        } catch (NumberFormatException e) {
+            msg.append("The phone number cannot be empty and must contain just numbers \n");
+        }
+        if (address1.isEmpty()) {
             msg.append("The address cannot be empty.");
-        if(address2.isEmpty())
+        }
+        if (address2.isEmpty()) {
             address2 = " ";
-        
+        }
+
         // insert into db
-        if(! addressDAO.getAllAddress(address1, address2,cityId, Integer.toString(postalCodeInt),
-                    Integer.toString(phoneInt))){
-            
+        if (!addressDAO.getAllAddress(address1, address2, cityId, Integer.toString(postalCodeInt),
+                Integer.toString(phoneInt))) {
+
             addressDAO.insertAddress(address1, address2, cityId, Integer.toString(postalCodeInt),
                     Integer.toString(phoneInt), userName);
         }
-        
+
         // get address Id
-        int addressId = addressDAO.getAdressId(address1, address2,cityId, Integer.toString(postalCodeInt),
-                    Integer.toString(phoneInt));
-        return addressId;   
+        int addressId = addressDAO.getAdressId(address1, address2, cityId, Integer.toString(postalCodeInt),
+                Integer.toString(phoneInt));
+        return addressId; 
     }
    /**
     * 
@@ -376,10 +376,11 @@ public class AddCustomerController implements Initializable {
     
     private void checkIfCustomerExist(CustomerDAOImpl customerDAO, int addressId, String customerName, StringBuilder msg) throws Exception {
 
-        System.out.println("here "+ customerName + addressId);
+      //  System.out.println("here "+ customerName + addressId);
         if ( customerDAO.selectedCustomer(customerName)!= null &&
                 customerDAO.selectedCustomer(customerName).getAddressId() == addressId) {
             msg.append("The customer already exist in the system");
         }
-    }
+    }  
+  
 }

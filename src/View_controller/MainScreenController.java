@@ -12,6 +12,7 @@ import DAO.ReportsDAOImpl;
 import Model.Appointment;
 import Model.Customer;
 import Model.Reports;
+import Utils.CallNewScreen;
 import Utils.TimeConversion;
 
 import java.io.IOException;
@@ -52,6 +53,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import Utils.DisplayTerminal;
 
 /**
  * FXML Controller class
@@ -163,19 +165,27 @@ public class MainScreenController implements Initializable {
     @FXML
     private void addCustomerAction(ActionEvent event) throws IOException {
         
+        CallNewScreen ns = displayScreen(event);
+        ns.displayScreen("AddCustomer.fxml", "New customer");
+        
+        /**
         // call add customer screen 
         Parent root = FXMLLoader.load(getClass().getResource("AddCustomer.fxml"));
         Scene scene = new Scene(root );
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
-       stage.setTitle("New customer");
+        stage.setTitle("New customer");
         stage.show(); 
+        */
     }
 
     @FXML
     private void updateCustomeAction(ActionEvent event) throws IOException {
         
+        CallNewScreen ns = displayScreen(event);
+        ns.displayScreen("UpdadeCustomer.fxml", "Customer update");
 
+        /**
         // call updade customer screen
         Parent root;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("UpdadeCustomer.fxml"));
@@ -185,25 +195,15 @@ public class MainScreenController implements Initializable {
         updadeCustomerStage.setScene(customerScene);
         updadeCustomerStage.setTitle("Customer update");
         updadeCustomerStage.show();
+        */
      
     }
 
     @FXML
     private void showReportsAction(ActionEvent event) throws IOException, Exception {
-        
-        // call report screen 
-        Parent root;
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Records.fxml"));
-         root = loader.load();
-        Scene scene = new Scene(root );
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.setTitle("Reports");
-        stage.show(); 
-        
+        String selectedRbutton = null;
         ObservableList<Reports> reportsList =FXCollections.observableArrayList();
         ReportsDAOImpl reportsDAO = new ReportsDAOImpl ();
-        String selectedRbutton = null; 
         
         if(monthRbtn.isSelected()){
            reportsList.addAll(reportsDAO.totalyMonth());
@@ -217,10 +217,29 @@ public class MainScreenController implements Initializable {
            reportsList.addAll(reportsDAO.byCustomers());
            selectedRbutton = "customer";
         }
- 
-        RecordsController controller = loader.getController();
-        controller.getReportsList(reportsList, selectedRbutton);
-        
+        if (selectedRbutton == null) {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setContentText("Please select one type of report");
+            a.setHeaderText(null);
+
+            Optional<ButtonType> result = a.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                a.close();
+            }
+        } else {
+            // call report screen 
+            Parent root;
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Records.fxml"));
+            root = loader.load();
+            Scene scene = new Scene(root);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.setTitle("Reports");
+            stage.show();
+
+            RecordsController controller = loader.getController();
+            controller.getReportsList(reportsList, selectedRbutton);
+        }
        
         
         
@@ -229,6 +248,10 @@ public class MainScreenController implements Initializable {
     @FXML
     private void newAptAction(ActionEvent event) throws IOException {
         
+        CallNewScreen ns = displayScreen(event);
+        ns.displayScreen("NewAppointment.fxml", "New appointment");
+        
+        /**
         // call new appointment screen
         Parent root = FXMLLoader.load(getClass().getResource("NewAppointment.fxml"));
         Scene scene = new Scene(root );
@@ -236,7 +259,7 @@ public class MainScreenController implements Initializable {
         stage.setScene(scene);
         stage.setTitle("New appointment");
         stage.show(); 
-        
+        */
         
     }
 
@@ -288,8 +311,20 @@ public class MainScreenController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
                 appointmentDAO.deleteAppointment(appointmentId);
-                loadAppointments();
-            }
+                Alert al = new Alert(Alert.AlertType.INFORMATION);
+                al.setTitle("Information Dialog");
+                al.setHeaderText(null);
+                al.setContentText("Appointment canceled");
+
+                Optional<ButtonType> r = al.showAndWait();
+                if (r.get() == ButtonType.OK) {
+                    appointmentDAO.deleteAppointment(appointmentId);
+                    loadAppointments();
+                    MonthCbox.setVisible(false);
+                    monthLbl.setVisible(false);
+                    showCbox.setValue("All");
+                }
+            }    
         } else {
 
             Alert a = new Alert(Alert.AlertType.ERROR);
@@ -446,7 +481,9 @@ public class MainScreenController implements Initializable {
           
         });
     }
-   
+   /**
+    * 
+    */
     private void radiobuttonsEvents() {
        
         // create a toggle group
@@ -456,8 +493,12 @@ public class MainScreenController implements Initializable {
         monthRbtn.setToggleGroup(tg);
         consultantRbtn.setToggleGroup(tg);
         customerRbtn.setToggleGroup(tg);
+      
     }
-    
+    /**
+     * 
+     * @param allAppointments 
+     */
     public void fifteenMinutesAlarm (ObservableList<Appointment> allAppointments){
         
         if(!allAppointments.isEmpty()){
@@ -474,4 +515,25 @@ public class MainScreenController implements Initializable {
             }
         }
     }
+    
+    private CallNewScreen displayScreen(ActionEvent event){
+        // lambda expression
+        //It reduced the amount of code lines.It is reusable, used more than once for different buttons, and it improved the code readability 
+        CallNewScreen nS = (fxmlName, title)->{
+            try {
+                Parent root;
+                root = FXMLLoader.load(getClass().getResource(fxmlName));
+                Scene scene = new Scene(root);
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.setScene(scene);
+                stage.setTitle(title);     
+                stage.show();
+            } catch (IOException ex) {
+                Logger.getLogger(MainScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } ;
+        
+        return nS;    
+    }
+ 
 }
