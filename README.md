@@ -11,6 +11,8 @@ Logins access:
  The schedule manager allows the user to insert, edit, and delete information about the customers and appointments. Other than that, once the user 
  login the application alert which appointments will be happening in the next 15 minutes and provided an option to print reports by month, customers, and or  consultant
  
+ <img src="https://github.com/dajalac/Schedule-Manager/blob/main/src/images/home-screenshot.PNG" height="400" />
+ 
  # Built with
  - Java
  - JavaFX
